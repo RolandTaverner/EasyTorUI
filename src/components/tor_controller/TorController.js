@@ -30,6 +30,10 @@ class TorController extends Component {
       dispatch(this.props.doFetchControllerInfo());
     }
   }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.ControllerInfo.pid !== this.props.ControllerInfo.pid;
+  }  
 }
 
 function mapStateToProps (state, ownProps) {

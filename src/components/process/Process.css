@@ -1,0 +1,22 @@
+.Process {
+    
+    margin: 5px;
+    margin-left: 30px;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #d7d7dF;
+    background-color: #F7F7FF;
+    float: left;
+}
+
+.ConfigTabs {
+    margin: 0px;
+}
+
+.ConfigTabPanel {
+    margin: 1px;
+    /*border: 1px solid #000000;*/
+}
+
+

@@ -109,7 +109,7 @@ export function receiveProcess(name, json, status) {
 export function fetchProcess(name) {
   return dispatch => {
     dispatch(requestProcess(name));
-    return fetch(`http://127.0.0.1:30000/api/controller/processes`)
+    return fetch(`http://127.0.0.1:30000/api/controller/processes/` + name)
       .then(response => { 
         response.json().then( data => { return {json: data, status: response.status};} )
         .then(jsonResponse => {
@@ -125,5 +125,99 @@ export function fetchProcess(name) {
 export function doFetchProcess(name) {
   return (dispatch, getState) => {
     return fetchProcess(name);
+  }
+}
+
+/*******************************************************************************
+  Configs
+*******************************************************************************/
+export const REQUEST_CONFIG = 'REQUEST_CONFIG'
+export function requestConfig(processName, configName) {
+  return {
+    type : REQUEST_CONFIG,
+    processName : processName,
+    configName : configName
+  }
+}
+
+export const RECEIVE_CONFIG = 'RECEIVE_CONFIG'
+export function receiveConfig(processName, configName, json, status) {
+  return {
+    type : RECEIVE_CONFIG,
+    processName : processName,
+    configName : configName,
+    response : json,
+    status : status,
+    receivedAt : Date.now()
+  }
+}
+
+export function fetchConfig(processName, configName) {
+  return dispatch => {
+    dispatch(requestConfig(processName, configName));
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + processName + "/configs/" + configName)
+      .then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+        .then(jsonResponse => {
+          dispatch(receiveConfig(processName, configName, jsonResponse.json, jsonResponse.status));
+        });
+      })
+      .catch(err => {
+        
+      });
+  }
+}
+
+export function doFetchConfig(processName, configName) {
+  return (dispatch, getState) => {
+    return fetchConfig(processName, configName);
+  }
+}
+
+/*******************************************************************************
+  Options
+*******************************************************************************/
+export const REQUEST_OPTION = 'REQUEST_OPTION'
+export function requestOption(processName, configName, optionName) {
+  return {
+    type : REQUEST_OPTION,
+    processName : processName,
+    configName : configName,
+    optionName : optionName
+  }
+}
+
+export const RECEIVE_OPTION = 'RECEIVE_OPTION'
+export function receiveOption(processName, configName, optionName, json, status) {
+  return {
+    type : RECEIVE_OPTION,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    response : json,
+    status : status,
+    receivedAt : Date.now()
+  }
+}
+
+export function fetchOption(processName, configName, optionName) {
+  return dispatch => {
+    dispatch(requestOption(processName, configName, optionName));
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + processName + "/configs/" + configName + "/options/" + optionName)
+      .then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+        .then(jsonResponse => {
+          dispatch(receiveOption(processName, configName, optionName, jsonResponse.json, jsonResponse.status));
+        });
+      })
+      .catch(err => {
+        
+      });
+  }
+}
+
+export function doFetchOption(processName, configName, optionName) {
+  return (dispatch, getState) => {
+    return fetchOption(processName, configName, optionName);
   }
 }
