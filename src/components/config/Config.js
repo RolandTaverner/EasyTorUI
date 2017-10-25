@@ -5,13 +5,12 @@ import ReactTable from 'react-table';
 import _ from 'lodash';
 import 'react-table/react-table.css';
 import './Config.css';
-//import Process from '../process/Process';
-import { doFetchConfig, doFetchOption } from '../../actions';
-
+import { doFetchConfig } from '../../actions';
+import { OptionPresentation, OptionView } from '../option/Option';
 
 class ConfigComponent extends Component {
   render() {
-    const { dispatch, Config, Options } = this.props;
+    const { dispatch, processName, configName, Config, Options } = this.props;
     let data = [];
 
     if (Config === undefined)
@@ -22,7 +21,7 @@ class ConfigComponent extends Component {
     {
       if (Config.options !== null)
       {
-        data = Config.options.map( optName => { return { name : optName, presentation : (_.find(Options, opt => { return opt.name === optName; }) || { name : optName, presentation: "Loading" } ).presentation }; } );
+        data = Config.options.map( optName => { return { name : optName};});
       }
     }
     const columns = [
@@ -35,8 +34,10 @@ class ConfigComponent extends Component {
       {
         Header: "Presentation",
         id : "presentation",
-        accessor: d => d.presentation,
-        width: 400
+        width: 400,
+        Cell : row => (
+          <OptionPresentation processName={processName} configName={configName} optionName={row.original.name} />
+        )
       },
       {
         Header: "",
@@ -57,12 +58,17 @@ class ConfigComponent extends Component {
           data={data}
           columns={columns}
           showPagination={data.length > rowsPerPage}
-          pageSize={ rowsPerPage }
+          defaultPageSize={ rowsPerPage }
+          filterable={true}
+          defaultFilterMethod={ (filter, row, column) => {
+            const id = filter.pivotId || filter.id
+            return row[id] !== undefined ? String(row[id]).toLocaleLowerCase().includes(filter.value.toLocaleLowerCase()) : true
+          }}
           className="-striped -highlight"
           SubComponent={
             row => {
               return (
-                <div>TODO: Option component {row.original.name} </div>
+                <OptionView processName={processName} configName={configName} optionName={row.original.name} />
               );
             }
           }
@@ -71,11 +77,6 @@ class ConfigComponent extends Component {
     );
   }
 
-  fetchOptions() {
-    const { dispatch, processName, configName, Config } = this.props;
-    Config.options.forEach( optionName => { dispatch(this.props.doFetchOption(processName, configName, optionName )); });
-  }
-  
   componentDidMount() {
     const { dispatch, Config, processName, configName } = this.props;
 
@@ -86,45 +87,24 @@ class ConfigComponent extends Component {
     }
   }
   
-  componentWillUpdate(nextProps, nextState) {
-    const { dispatch, processName, configName, Config } = this.props;
-    
-    const currentOpts = (Config !== undefined && Config.options !== null) ? Config.options : [];
-    const nextOpts = (nextProps.Config !== undefined && nextProps.Config.options !== null) ? nextProps.Config.options : [];
-    
-    if (!_.isEqual(currentOpts.sort(), nextOpts.sort()))
-    {
-      nextProps.Config.options.forEach( optionName => { dispatch(this.props.doFetchOption(processName, configName, optionName )); });
-    }
-  }
-
   shouldComponentUpdate(nextProps) {
-    const { dispatch, processName, configName, Config, Options } = this.props;
+    const { dispatch, processName, configName, Config } = this.props;
     
     const currentOptsNames = (Config !== undefined && Config.options !== null) ? Config.options : [];
     const nextOptsNames = (nextProps.Config !== undefined && nextProps.Config.options !== null) ? nextProps.Config.options : [];
     
-    if (!_.isEqual(currentOptsNames.sort(), nextOptsNames.sort()))
-    {
-      return true;
-    }
-    const compareOptions = (a, b) => {
-        return a.name.localeCompare(b.name);
-    }
-    
-    return !_.isEqual(Options.sort(compareOptions), nextProps.Options.sort(compareOptions));
+    return !_.isEqual(currentOptsNames.sort(), nextOptsNames.sort());
   }  
 }
 
 function mapStateToProps (state, ownProps) {
   return {
     Config : _.find(state.Configs, c => { return c.processName === ownProps.processName && c.configName === ownProps.configName; } ),
-    Options : state.Options.filter(opt => {return opt.processName === ownProps.processName && opt.configName === ownProps.configName;} ).map(opt => { return { name : opt.optionName, presentation : opt.presentation }; })
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchConfig, doFetchOption }, dispatch);
+  let actions = bindActionCreators({ doFetchConfig }, dispatch);
   return { ...actions, dispatch };
 }
 

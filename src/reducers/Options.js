@@ -31,7 +31,14 @@ const Options = (state = [], action) => {
           processName : action.processName,
           configName : action.configName,
           optionName : action.optionName,
-          presentation : action.response.presentation
+          presentation : action.response.presentation,
+          isSystem : action.response.system,
+          isRequired : action.response.required,
+          valueType : action.response.type,
+          isList : action.response.list,
+          domain : action.response.domain,
+          value : action.response.value,
+          defaultValue : action.response.default_value
         }
       ];
     default:
