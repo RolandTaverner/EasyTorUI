@@ -88,7 +88,7 @@ class ConfigComponent extends Component {
   }
   
   shouldComponentUpdate(nextProps) {
-    const { dispatch, processName, configName, Config } = this.props;
+    const { Config } = this.props;
     
     const currentOptsNames = (Config !== undefined && Config.options !== null) ? Config.options : [];
     const nextOptsNames = (nextProps.Config !== undefined && nextProps.Config.options !== null) ? nextProps.Config.options : [];

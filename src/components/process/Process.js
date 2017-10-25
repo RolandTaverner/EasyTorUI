@@ -35,8 +35,8 @@ class ProcessComponent extends Component {
   }
 
   componentDidMount() {
-    const { isFetching, configs } = this.props.Process;
     const { dispatch, processName } = this.props;
+    const { isFetching, configs } = this.props.Process;
 
     if (configs === null && !isFetching)
     {
@@ -45,15 +45,6 @@ class ProcessComponent extends Component {
   }
   
   componentWillUpdate(nextProps, nextState) {
-    //const { dispatch } = this.props;
-/*
-    const currentProcessNames = this.props.ProcessList.names !== null ? this.props.ProcessList.names : [];
-    
-    if (nextProps.ProcessList.names !== null && !_.isEqual(currentProcessNames.sort(), nextProps.ProcessList.names.sort())) 
-    {
-      nextProps.ProcessList.names.forEach((currentValue, index, array) => { dispatch(this.props.doFetchProcess(currentValue)); });
-    }
-  */
   }
 
   shouldComponentUpdate(nextProps) {

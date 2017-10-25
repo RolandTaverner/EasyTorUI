@@ -6,23 +6,58 @@ import './Option.css';
 import { doFetchOption } from '../../actions';
 
 
+class CheckboxComponent extends Component {
+  render() {
+    const { optionName, attrName, checked } = this.props;
+    return (
+      <div className="UIFormValueCheckBox">
+        {checked ?
+          <input type="checkbox" value="1" id={optionName + attrName} checked disabled /> 
+          : <input type="checkbox" value="0" id={optionName + attrName} disabled /> }
+          <label htmlFor={optionName + attrName}></label>
+      </div>
+    );  
+  }
+}
+
+class ListComponent extends Component {
+  render() {
+    const { optionName, attrName, values } = this.props;
+    const lis = values.map( (v, i) => <li className="UIFormValueListItem" key={attrName + i}>{v}</li> );
+    console.log(values);
+    console.log(lis);
+    return (
+      <ul className="UIFormValueList" id={optionName + attrName}>
+        {lis}
+      </ul>
+    );  
+  }
+}
+
 class OptionComponentBase extends Component {
-
-  componentDidMount() {
-    const { dispatch, Option, processName, configName, optionName } = this.props;
-
-    if (Option === undefined)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.Option === undefined)
     {
-      dispatch(this.props.doFetchOption(processName, configName, optionName));
+      console.log('componentWillReceiveProps ' + nextProps.optionName);
+      nextProps.dispatch(nextProps.doFetchOption(nextProps.processName, nextProps.configName, nextProps.optionName));
     }
   }
   
-  componentWillUpdate(nextProps, nextState) {
+  componentDidMount() {
+    const { dispatch, Option, processName, configName, optionName } = this.props;
+
+    console.log('componentDidMount ' + optionName);
+    if (Option === undefined)
+    {
+      console.log('doFetchOption ' + optionName);
+      dispatch(this.props.doFetchOption(processName, configName, optionName));
+    }
   }
 
   shouldComponentUpdate(nextProps) {
-    // const { dispatch, processName, configName, Config, Options } = this.props;
-    return true;
+    const { Option } = this.props;
+  
+    return !_.isEqual(Option, nextProps.Option);
   }  
 }
 
@@ -38,11 +73,13 @@ function mapDispatchToProps(dispatch) {
 }
 
 class OptionPresentationComponent extends OptionComponentBase {
-  render() {
-    const { Option } = this.props;
 
-    if (Option === undefined)
+  render() {
+    const { Option, dispatch, processName, configName, optionName } = this.props;
+
+    if (Option === undefined || Option.isFetching === true)
     {
+      console.log('render Loading ' + optionName);
       return (<div>Loading...</div>);
     }
     return (<div>{Option.presentation}</div>);
@@ -50,15 +87,16 @@ class OptionPresentationComponent extends OptionComponentBase {
 }
 
 class OptionViewComponent extends OptionComponentBase {
+
   render() {
     const { Option } = this.props;
 
-    if (Option === undefined)
+    if (Option === undefined || Option.isFetching === true)
     {
       return (<div>Loading...</div>);
     }
     return (
-      <table width='100%'>
+      <table className='UIForm' cellSpacing='5'>
         <tbody>
           <tr className='UIFormPair'>
             <td className='UIFormKey'>
@@ -78,21 +116,38 @@ class OptionViewComponent extends OptionComponentBase {
           </tr>
           <tr className='UIFormPair'>
             <td className='UIFormKey'>
-              <label>System option</label>
+              <label>System</label>
             </td>
             <td className='UIFormValue'>
-            {Option.isSystem.toString()}
+              <CheckboxComponent optionName={Option.optionName} attrName={'isSystem'} checked={Option.isSystem} />
             </td>
           </tr>
           <tr className='UIFormPair'>
             <td className='UIFormKey'>
-              <label>Required option</label>
+              <label>Required</label>
             </td>
             <td className='UIFormValue'>
-            {Option.isRequired.toString()}
+              <CheckboxComponent optionName={Option.optionName} attrName={'isRequired'} checked={Option.isRequired} />
             </td>
           </tr>
-
+          <tr className='UIFormPair'>
+            <td className='UIFormKey'>
+              <label>Multivalue</label>
+            </td>
+            <td className='UIFormValue'>
+              <CheckboxComponent optionName={Option.optionName} attrName={'isList'} checked={Option.isList} />
+            </td>
+          </tr>
+          {Option.valueType === "domain" ? 
+            (<tr className='UIFormPair'>
+              <td className='UIFormKey'>
+                <label>Domain</label>
+              </td>
+              <td className='UIFormValue'>
+                <ListComponent optionName={Option.optionName} attrName={'domain'} values={Option.domain} />
+              </td>
+            </tr>) : (null)
+          }
         </tbody>
       </table>
       );

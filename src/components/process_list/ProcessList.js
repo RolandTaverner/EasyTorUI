@@ -45,6 +45,7 @@ class ProcessListComponent extends Component {
     
     return (
       <div className="Processes">
+        <div className="ProcessesHeader">Process management</div>
         <ReactTable
           data={data}
           columns={columns}
