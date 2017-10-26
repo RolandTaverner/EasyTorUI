@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import logo from './Logo.png';
-import './App.css';
-import TorController from '../tor_controller/TorController';
+import React, { Component } from "react";
+import logo from "./Logo.png";
+import "./App.css";
+import TorController from "../tor_controller/TorController";
 
 class App extends Component {
   render() {
@@ -12,7 +12,7 @@ class App extends Component {
           <span className="App-title"> <h1 className="App-title-text">Welcome to PraeTor</h1> </span>
         </header>
         <div>
-            <TorController />
+          <TorController />
         </div>
       </div>
     );

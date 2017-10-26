@@ -1,23 +1,19 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import ReactTable from 'react-table';
-import _ from 'lodash';
-import 'react-table/react-table.css';
-import './Config.css';
-import { doFetchConfig } from '../../actions';
-import { OptionPresentation, OptionView } from '../option/Option';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import ReactTable from "react-table";
+import _ from "lodash";
+import "react-table/react-table.css";
+import "./Config.css";
+import { doFetchConfig } from "../../actions";
+import { OptionPresentation, OptionView } from "../option/Option";
 
 class ConfigComponent extends Component {
   render() {
     const { processName, configName, Config } = this.props;
     let data = [];
 
-    if (Config === undefined)
-    {
-      
-    }
-    else
+    if (Config !== undefined)
     {
       if (Config.options !== null)
       {
@@ -49,9 +45,9 @@ class ConfigComponent extends Component {
           showPagination={data.length > rowsPerPage}
           defaultPageSize={ rowsPerPage }
           filterable={true}
-          defaultFilterMethod={ (filter, row, column) => {
-            const id = filter.pivotId || filter.id
-            return row[id] !== undefined ? String(row[id]).toLocaleLowerCase().includes(filter.value.toLocaleLowerCase()) : true
+          defaultFilterMethod={ (filter, row) => {
+            const id = filter.pivotId || filter.id;
+            return row[id] !== undefined ? String(row[id]).toLocaleLowerCase().includes(filter.value.toLocaleLowerCase()) : true;
           }}
           className="-striped -highlight"
           SubComponent={
@@ -89,7 +85,7 @@ class ConfigComponent extends Component {
 function mapStateToProps (state, ownProps) {
   return {
     Config : _.find(state.Configs, c => { return c.processName === ownProps.processName && c.configName === ownProps.configName; } ),
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {

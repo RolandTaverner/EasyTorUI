@@ -1,9 +1,9 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 import {
   REQUEST_OPTION,
   RECEIVE_OPTION
-} from '../actions'
+} from "../actions";
 
 
 const Options = (state = [], action) => {
@@ -18,38 +18,38 @@ const Options = (state = [], action) => {
   let newItem = {};
 
   switch (action.type) {
-    case REQUEST_OPTION:
-      newItem = Object.assign({}, existingItem,
-        {
-          isFetching : true,
-          error : null,
-          processName : action.processName,
-          configName : action.configName,
-          optionName : action.optionName,
-          presentation : null,
-          value : null
-        });
-      return [ ...state.filter(notThisOption), newItem ];
-    case RECEIVE_OPTION:
-      newItem = Object.assign({}, existingItem,
-        {
-          isFetching : false,
-          error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null },
-          processName : action.processName,
-          configName : action.configName,
-          optionName : action.optionName,
-          presentation : action.response.presentation,
-          isSystem : action.response.system,
-          isRequired : action.response.required,
-          valueType : action.response.type,
-          isList : action.response.list,
-          domain : action.response.domain,
-          value : action.response.value,
-          defaultValue : action.response.default_value
-        });
-      return [ ...state.filter(notThisOption), newItem ];
-    default:
-      return state;
+  case REQUEST_OPTION:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : true,
+        error : null,
+        processName : action.processName,
+        configName : action.configName,
+        optionName : action.optionName,
+        presentation : null,
+        value : null
+      });
+    return [ ...state.filter(notThisOption), newItem ];
+  case RECEIVE_OPTION:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null },
+        processName : action.processName,
+        configName : action.configName,
+        optionName : action.optionName,
+        presentation : action.response.presentation,
+        isSystem : action.response.system,
+        isRequired : action.response.required,
+        valueType : action.response.type,
+        isList : action.response.list,
+        domain : action.response.domain,
+        value : action.response.value,
+        defaultValue : action.response.default_value
+      });
+    return [ ...state.filter(notThisOption), newItem ];
+  default:
+    return state;
   }};
 
 export default Options;

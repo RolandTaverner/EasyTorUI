@@ -1,15 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import { createLogger } from 'redux-logger';
-import 'babel-polyfill';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunkMiddleware from "redux-thunk";
+import { createLogger } from "redux-logger";
+import "babel-polyfill";
 
-import './index.css';
-import App from './components/app/App';
-import { TorControllerReducers, initialState } from './reducers';
-import registerServiceWorker from './registerServiceWorker';
+import "./index.css";
+import App from "./components/app/App";
+import { TorControllerReducers, initialState } from "./reducers";
+import registerServiceWorker from "./registerServiceWorker";
 
 const loggerMiddleware = createLogger();
 
@@ -22,7 +22,7 @@ ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);
 
 registerServiceWorker();

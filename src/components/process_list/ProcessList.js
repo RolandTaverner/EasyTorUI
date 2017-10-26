@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import ReactTable from 'react-table';
-import _ from 'lodash';
-import 'react-table/react-table.css';
-import './ProcessList.css';
-import { ProcessView, ProcessState, ProcessActions } from '../process/Process';
-import { doFetchProcessList } from '../../actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import ReactTable from "react-table";
+import _ from "lodash";
+import "react-table/react-table.css";
+import "./ProcessList.css";
+import { ProcessView, ProcessState, ProcessActions } from "../process/Process";
+import { doFetchProcessList } from "../../actions";
 
 
 class ProcessListComponent extends Component {
@@ -29,10 +29,8 @@ class ProcessListComponent extends Component {
         Header: "Status",
         id : "status",
         width: 100,
-        Cell : row => (
-          <ProcessState processName={row.original.name} />
-          )
-        },
+        Cell : row => ( <ProcessState processName={row.original.name} /> )
+      },
       {
         Header: "",
         id : "actions",
@@ -86,7 +84,7 @@ class ProcessListComponent extends Component {
 function mapStateToProps (state, ownProps) {
   return {
     ProcessList : state.ProcessList
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {

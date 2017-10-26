@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import './TorController.css';
-import { doFetchControllerInfo } from '../../actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import "./TorController.css";
+import { doFetchControllerInfo } from "../../actions";
 
-import ProcessList from '../process_list/ProcessList';
+import ProcessList from "../process_list/ProcessList";
 
 class TorController extends Component {
   render() {
@@ -41,7 +41,7 @@ class TorController extends Component {
 function mapStateToProps (state, ownProps) {
   return {
     ControllerInfo: state.ControllerInfo
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {

@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import _ from 'lodash';
-import 'react-table/react-table.css';
-import 'react-tabs/style/react-tabs.css';
-import './Process.css';
-import { doFetchProcess, doFetchPostProcessAction } from '../../actions';
-import Config from '../config/Config';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import _ from "lodash";
+import "react-table/react-table.css";
+import "react-tabs/style/react-tabs.css";
+import "./Process.css";
+import { doFetchProcess, doFetchPostProcessAction } from "../../actions";
+import Config from "../config/Config";
 
 class ProcessComponentBase extends Component {
 
@@ -46,16 +46,16 @@ class ProcessViewComponent extends ProcessComponentBase {
           CONFIGURATIONS
         </div>
         <div className="ConfigTabs">
-        { Process.configs !== null ?
-          <Tabs>
-            <TabList>
-              {Process.configs.map( (confName, index) =>  { return <Tab key={"Tab" + confName}>{confName}</Tab>;})}
-            </TabList>
-            <div className="ConfigTabPanel">
-              {Process.configs.map((confName, index) => { return <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel>;})}
-            </div>
-          </Tabs> : "" }
-          </div>
+          { Process.configs !== null ?
+            <Tabs>
+              <TabList>
+                {Process.configs.map( (confName, index) =>  { return <Tab key={"Tab" + confName}>{confName}</Tab>;})}
+              </TabList>
+              <div className="ConfigTabPanel">
+                {Process.configs.map((confName, index) => { return <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel>;})}
+              </div>
+            </Tabs> : "" }
+        </div>
       </div>
     );
   }
@@ -99,7 +99,7 @@ class ProcessActionsComponent extends ProcessComponentBase {
 function mapStateToProps (state, ownProps) {
   return {
     Process : _.find(state.Processes, p => { return p.name === ownProps.processName; } )
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
