@@ -23,4 +23,19 @@
     /*border: 1px solid #000000;*/
 }
 
-
+.ProcessButtons {
+  
+}
+.ProcessButton {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.RefreshProcessButton {
+  
+}
+.StartProcessButton {
+  
+}
+.StopProcessButton {
+  
+}

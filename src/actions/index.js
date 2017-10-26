@@ -23,7 +23,7 @@ export function receiveControllerInfo(json, status) {
 export function fetchControllerInfo() {
   return dispatch => {
     dispatch(requestControllerInfo());
-    return fetch(`http://127.0.0.1:30000/api/controller`)
+    return fetch("http://127.0.0.1:30000/api/controller")
       .then(response => { 
         response.json().then( data => { return {json: data, status: response.status};} )
         .then(jsonResponse => {
@@ -45,14 +45,14 @@ export function doFetchControllerInfo() {
 /*******************************************************************************
   ProcessList
 *******************************************************************************/
-export const REQUEST_PROCESSLIST = 'REQUEST_PROCESSLIST'
+export const REQUEST_PROCESSLIST = "REQUEST_PROCESSLIST"
 export function requestProcessList() {
   return {
     type : REQUEST_PROCESSLIST
   }
 }
 
-export const RECEIVE_PROCESSLIST = 'RECEIVE_PROCESSLIST'
+export const RECEIVE_PROCESSLIST = "RECEIVE_PROCESSLIST"
 export function receiveProcessList(json, status) {
   return {
     type : RECEIVE_PROCESSLIST,
@@ -65,7 +65,7 @@ export function receiveProcessList(json, status) {
 export function fetchProcessList() {
   return dispatch => {
     dispatch(requestProcessList());
-    return fetch(`http://127.0.0.1:30000/api/controller/processes`)
+    return fetch("http://127.0.0.1:30000/api/controller/processes")
       .then(response => { 
         response.json().then( data => { return {json: data, status: response.status};} )
         .then(jsonResponse => {
@@ -87,7 +87,7 @@ export function doFetchProcessList() {
 /*******************************************************************************
   Processes
 *******************************************************************************/
-export const REQUEST_PROCESS = 'REQUEST_PROCESS'
+export const REQUEST_PROCESS = "REQUEST_PROCESS"
 export function requestProcess(name) {
   return {
     type : REQUEST_PROCESS,
@@ -95,7 +95,7 @@ export function requestProcess(name) {
   }
 }
 
-export const RECEIVE_PROCESS = 'RECEIVE_PROCESS'
+export const RECEIVE_PROCESS = "RECEIVE_PROCESS"
 export function receiveProcess(name, json, status) {
   return {
     type : RECEIVE_PROCESS,
@@ -109,7 +109,7 @@ export function receiveProcess(name, json, status) {
 export function fetchProcess(name) {
   return dispatch => {
     dispatch(requestProcess(name));
-    return fetch(`http://127.0.0.1:30000/api/controller/processes/` + name)
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + name)
       .then(response => { 
         response.json().then( data => { return {json: data, status: response.status};} )
         .then(jsonResponse => {
@@ -129,9 +129,65 @@ export function doFetchProcess(name) {
 }
 
 /*******************************************************************************
+  Process actions
+*******************************************************************************/
+export const POST_PROCESS_ACTION = "POST_PROCESS_ACTION"
+export function postProcessAction(name, action) {
+  return {
+    type : POST_PROCESS_ACTION,
+    name : name,
+    action : action
+  }
+}
+
+export const RECEIVE_PROCESS_ACTION_RESULT = "RECEIVE_PROCESS_ACTION_RESULT"
+export function receiveProcessActionResult(name, action, json, status) {
+  return {
+    type : RECEIVE_PROCESS_ACTION_RESULT,
+    name : name,
+    response : json,
+    status : status,
+    receivedAt : Date.now()
+  }
+}
+
+export function fetchPostProcessAction(name, action) {
+  return dispatch => {
+    dispatch(postProcessAction(name));
+    return fetch(
+      "http://127.0.0.1:30000/api/controller/processes/" + name + "/action",
+      {
+        method: "POST",
+        mode: "cors",
+        redirect: "follow",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(action)
+      }
+    ).then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+        .then(jsonResponse => {
+          dispatch(receiveProcessActionResult(name, action, jsonResponse.json, jsonResponse.status));
+        });
+      })
+      .catch(err => {
+        
+      });
+  }
+}
+
+export function doFetchPostProcessAction(name, action) {
+  return (dispatch, getState) => {
+    return fetchPostProcessAction(name, action);
+  }
+}
+/*******************************************************************************
   Configs
 *******************************************************************************/
-export const REQUEST_CONFIG = 'REQUEST_CONFIG'
+export const REQUEST_CONFIG = "REQUEST_CONFIG"
 export function requestConfig(processName, configName) {
   return {
     type : REQUEST_CONFIG,
@@ -140,7 +196,7 @@ export function requestConfig(processName, configName) {
   }
 }
 
-export const RECEIVE_CONFIG = 'RECEIVE_CONFIG'
+export const RECEIVE_CONFIG = "RECEIVE_CONFIG"
 export function receiveConfig(processName, configName, json, status) {
   return {
     type : RECEIVE_CONFIG,
@@ -177,7 +233,7 @@ export function doFetchConfig(processName, configName) {
 /*******************************************************************************
   Options
 *******************************************************************************/
-export const REQUEST_OPTION = 'REQUEST_OPTION'
+export const REQUEST_OPTION = "REQUEST_OPTION"
 export function requestOption(processName, configName, optionName) {
   return {
     type : REQUEST_OPTION,
@@ -187,7 +243,7 @@ export function requestOption(processName, configName, optionName) {
   }
 }
 
-export const RECEIVE_OPTION = 'RECEIVE_OPTION'
+export const RECEIVE_OPTION = "RECEIVE_OPTION"
 export function receiveOption(processName, configName, optionName, json, status) {
   return {
     type : RECEIVE_OPTION,

@@ -17,7 +17,7 @@ const ControllerInfo = (state = {}, action) => {
       return Object.assign({}, state, 
         { 
           isFetching : false,
-          fetchError : null,
+          fetchError : action.status === 200 ? null : action.response,
           pid : action.response.PID
         }
       );

@@ -26,7 +26,7 @@ const Options = (state = [], action) => {
                                 && opt.optionName.localeCompare(action.optionName) === 0))),
         {
           isFetching : false,
-          fetchError : null,
+          fetchError : action.status === 200 ? null : action.response,
           status : action.status,
           processName : action.processName,
           configName : action.configName,

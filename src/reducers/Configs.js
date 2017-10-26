@@ -21,8 +21,7 @@ const Configs = (state = [], action) => {
         ...state.filter(c => (!(c.configName.localeCompare(action.configName) === 0 && c.processName.localeCompare(action.processName) === 0))),
         {
           isFetching : false,
-          fetchError : null,
-          status : action.status,
+          error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null},
           processName : action.processName,
           configName : action.configName,
           options : action.response.options

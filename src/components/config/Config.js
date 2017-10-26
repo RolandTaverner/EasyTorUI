@@ -10,7 +10,7 @@ import { OptionPresentation, OptionView } from '../option/Option';
 
 class ConfigComponent extends Component {
   render() {
-    const { dispatch, processName, configName, Config, Options } = this.props;
+    const { processName, configName, Config } = this.props;
     let data = [];
 
     if (Config === undefined)
@@ -34,19 +34,8 @@ class ConfigComponent extends Component {
       {
         Header: "Presentation",
         id : "presentation",
-        width: 400,
         Cell : row => (
           <OptionPresentation processName={processName} configName={configName} optionName={row.original.name} />
-        )
-      },
-      {
-        Header: "",
-        id : "actions",
-        accessor: d => d.name,
-        Cell : row => (
-          <div>
-            
-          </div>
         )
       }
     ];

@@ -9,7 +9,7 @@ const ProcessList = (state = [], action) => {
       return Object.assign({}, state, 
         { 
           isFetching : true,
-          fetchError : null,
+          error : null,
           names : null
         }
       );
@@ -17,7 +17,7 @@ const ProcessList = (state = [], action) => {
       return Object.assign({}, state, 
         { 
           isFetching : false,
-          fetchError : null,
+          error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null},
           names : action.response
         }
       );

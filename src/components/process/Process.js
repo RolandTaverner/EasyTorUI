@@ -6,7 +6,7 @@ import _ from 'lodash';
 import 'react-table/react-table.css';
 import 'react-tabs/style/react-tabs.css';
 import './Process.css';
-import { doFetchProcess } from '../../actions';
+import { doFetchProcess, doFetchPostProcessAction } from '../../actions';
 import Config from '../config/Config';
 
 class ProcessComponentBase extends Component {
@@ -21,11 +21,18 @@ class ProcessComponentBase extends Component {
   componentDidMount() {
     const { dispatch, processName, Process } = this.props;
 
-    if (Process == undefined || (Process.configs === null && !Process.isFetching))
+    if (Process === undefined || (Process.configs === null && !Process.isFetching))
     {
       dispatch(this.props.doFetchProcess(processName));
     }
   }
+
+  shouldComponentUpdate(nextProps) {
+    const { Process } = this.props;
+  
+    return !_.isEqual(Process, nextProps.Process);
+  }  
+
 }
 
 class ProcessViewComponent extends ProcessComponentBase {
@@ -57,26 +64,49 @@ class ProcessViewComponent extends ProcessComponentBase {
 class ProcessStateComponent extends ProcessComponentBase {
 
   render() {
-    const { Process, processName } = this.props;
+    const { Process } = this.props;
 
     if (Process === undefined || Process.isFetching === true)
     {
       return (<div>Loading...</div>);
     }
-    return (<div>{Process.state}</div>);
+    return (<div>{Process.processState}</div>);
+  }
+}
+
+class ProcessActionsComponent extends ProcessComponentBase {
+
+  render() {
+    const { dispatch, Process, processName } = this.props;
+    let buttons = [];
+    buttons.push(<button className="ProcessButton RefreshProcessButton" key={processName + "Refresh"} onClick={() => { dispatch(this.props.doFetchProcess(processName)); } }>Refresh</button>);
+
+    if (Process !== undefined && Process.processState !== null)
+    {
+      if (Process.processState === "starting" || Process.processState === "running")
+      {
+        buttons.push(<button className="ProcessButton StopProcessButton" key={processName + "Stop"} onClick={() => { dispatch(this.props.doFetchPostProcessAction(processName, {action : "stop"})); } }>Stop</button>);
+      }
+      else if (Process.processState === "stopped")
+      {
+        buttons.push(<button className="ProcessButton StartProcessButton" key={processName + "Start"} onClick={() => { dispatch(this.props.doFetchPostProcessAction(processName, {action : "start"})); } }>Start</button>);
+      }
+    }
+    return ( <div className="ProcessButtons"> {buttons} </div> );
   }
 }
 
 function mapStateToProps (state, ownProps) {
   return {
-    Process : _.find(state.Processes, p => { return p.name == ownProps.processName; } )
+    Process : _.find(state.Processes, p => { return p.name === ownProps.processName; } )
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchProcess }, dispatch);
+  let actions = bindActionCreators({ doFetchProcess, doFetchPostProcessAction }, dispatch);
   return { ...actions, dispatch };
 }
 
 export const ProcessView = connect(mapStateToProps, mapDispatchToProps)(ProcessViewComponent);
 export const ProcessState = connect(mapStateToProps, mapDispatchToProps)(ProcessStateComponent);
+export const ProcessActions = connect(mapStateToProps, mapDispatchToProps)(ProcessActionsComponent);

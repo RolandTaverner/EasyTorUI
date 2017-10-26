@@ -5,17 +5,17 @@ import ReactTable from 'react-table';
 import _ from 'lodash';
 import 'react-table/react-table.css';
 import './ProcessList.css';
-import { ProcessView, ProcessState } from '../process/Process';
+import { ProcessView, ProcessState, ProcessActions } from '../process/Process';
 import { doFetchProcessList, doFetchProcess } from '../../actions';
 
 
 class ProcessListComponent extends Component {
   render() {
-    const { dispatch, ProcessList, ProcessByName } = this.props;
+    const { ProcessList } = this.props;
     let data = [];
     if (ProcessList.names !== null)
     {
-      data = ProcessList.names.map( procName => { return { name : procName, status : (_.find(ProcessByName, p => { return p.name === procName; }) || { status: "Loading" } ).status }; } );
+      data = ProcessList.names.map( procName => { return { name : procName }; } );
     }
 
     const columns = [
@@ -36,11 +36,8 @@ class ProcessListComponent extends Component {
       {
         Header: "",
         id : "actions",
-        accessor: d => d.name,
         Cell : row => (
-          <div>
-            <button onClick={() => { dispatch(this.props.doFetchProcess(row.value)); } }>Refresh</button>
-          </div>
+          <ProcessActions processName={row.original.name} />
         )
       }
     ];
@@ -75,15 +72,6 @@ class ProcessListComponent extends Component {
     if (names === null && !isFetching)
     {
       dispatch(this.props.doFetchProcessList());
-    }
-  }
-  
-  componentWillUpdate(nextProps, nextState) {
-    const { dispatch } = this.props;
-    const currentProcessNames = this.props.ProcessList.names !== null ? this.props.ProcessList.names : [];
-    if (nextProps.ProcessList.names !== null && !_.isEqual(currentProcessNames.sort(), nextProps.ProcessList.names.sort())) 
-    {
-      // nextProps.ProcessList.names.forEach((currentValue, index, array) => { dispatch(this.props.doFetchProcess(currentValue)); });
     }
   }
 

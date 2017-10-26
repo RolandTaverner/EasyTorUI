@@ -75,7 +75,7 @@ function mapDispatchToProps(dispatch) {
 class OptionPresentationComponent extends OptionComponentBase {
 
   render() {
-    const { Option, dispatch, processName, configName, optionName } = this.props;
+    const { Option, optionName } = this.props;
 
     if (Option === undefined || Option.isFetching === true)
     {
@@ -114,6 +114,16 @@ class OptionViewComponent extends OptionComponentBase {
             {Option.valueType}
             </td>
           </tr>
+          {Option.valueType === "domain" ? 
+            (<tr className='UIFormPair'>
+              <td className='UIFormKey'>
+                <label>Domain</label>
+              </td>
+              <td className='UIFormValue'>
+                <ListComponent optionName={Option.optionName} attrName={'domain'} values={Option.domain} />
+              </td>
+            </tr>) : (null)
+          }
           <tr className='UIFormPair'>
             <td className='UIFormKey'>
               <label>System</label>
@@ -138,16 +148,18 @@ class OptionViewComponent extends OptionComponentBase {
               <CheckboxComponent optionName={Option.optionName} attrName={'isList'} checked={Option.isList} />
             </td>
           </tr>
-          {Option.valueType === "domain" ? 
-            (<tr className='UIFormPair'>
+          { Option.defaultValue !== undefined ? 
+            <tr className='UIFormPair'>
               <td className='UIFormKey'>
-                <label>Domain</label>
+                <label>Default value</label>
               </td>
               <td className='UIFormValue'>
-                <ListComponent optionName={Option.optionName} attrName={'domain'} values={Option.domain} />
+                { Option.isList ? 
+                    <ListComponent optionName={Option.optionName} attrName={'defaultValue'} values={Option.defaultValue} />
+                  : Option.defaultValue
+                }
               </td>
-            </tr>) : (null)
-          }
+            </tr> : (null)}
           <tr className='UIFormPair'>
             <td className='UIFormKey'>
               <label>Value</label>
@@ -163,6 +175,7 @@ class OptionViewComponent extends OptionComponentBase {
               }
             </td>
           </tr>
+
         </tbody>
       </table>
       );
