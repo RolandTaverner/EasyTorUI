@@ -9,6 +9,11 @@
     float: left;
 }
 
+.ProcessHeaders {
+    margin: 10px;
+ 
+}
+
 .ConfigTabs {
     margin: 0px;
 }

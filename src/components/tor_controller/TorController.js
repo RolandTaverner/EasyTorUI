@@ -10,10 +10,12 @@ class TorController extends Component {
   render() {
     const { ControllerInfo } = this.props;
     return (
-      <div className="App">
-        <p className="App-intro">
-          PID = { ControllerInfo.pid === null ? "Loading..." : ControllerInfo.pid }
-        </p>
+      <div className="Controller">
+        <div className="ControllerInfo">
+          <p className="App-intro">
+            PID = { ControllerInfo.pid === null ? "Loading..." : ControllerInfo.pid }
+          </p>
+        </div>
         <div>
           {ControllerInfo.pid === null ? "" : (<ProcessList />)}
         </div>

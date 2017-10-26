@@ -1,16 +1,20 @@
-.ProcessesHeader {
-    width: 100%;
-    margin: 10px;
-    padding: 3px;
-    float: left;
-    font-weight: bold;
-    text-align: left;
-}
 .Processes {
     width: 1000px;
     margin: 10px;
     padding: 10px;
     border: 1px solid #73AD21;
     border-radius: 10px;
-    float: left;
+    background-color: #F0FFF0;
+}
+
+.ProcessesHeader {
+    margin: 10px;
+    padding: 3px;
+    font-weight: bold;
+    text-align: left;
+    background-color: #F0FFF0;
+}
+
+.ProcessesTable {
+    background-color: white;
 }

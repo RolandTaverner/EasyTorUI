@@ -5,7 +5,7 @@ import ReactTable from 'react-table';
 import _ from 'lodash';
 import 'react-table/react-table.css';
 import './ProcessList.css';
-import Process from '../process/Process';
+import { ProcessView, ProcessState } from '../process/Process';
 import { doFetchProcessList, doFetchProcess } from '../../actions';
 
 
@@ -28,9 +28,11 @@ class ProcessListComponent extends Component {
       {
         Header: "Status",
         id : "status",
-        accessor: d => d.status,
-        width: 100
-      },
+        width: 100,
+        Cell : row => (
+          <ProcessState processName={row.original.name} />
+          )
+        },
       {
         Header: "",
         id : "actions",
@@ -46,20 +48,22 @@ class ProcessListComponent extends Component {
     return (
       <div className="Processes">
         <div className="ProcessesHeader">Process management</div>
-        <ReactTable
-          data={data}
-          columns={columns}
-          showPagination={false}
-          pageSize={ data.length  }
-          className="-striped -highlight"
-          SubComponent={
-            row => {
-              return (
-                <Process processName={row.original.name} />
-              );
+        <div className="ProcessesTable">
+          <ReactTable
+            data={data}
+            columns={columns}
+            showPagination={false}
+            pageSize={ data.length  }
+            className="-striped -highlight"
+            SubComponent={
+              row => {
+                return (
+                  <ProcessView processName={row.original.name} />
+                );
+              }
             }
-          }
-        />
+          />
+        </div>
       </div>
     );
   }
@@ -79,33 +83,21 @@ class ProcessListComponent extends Component {
     const currentProcessNames = this.props.ProcessList.names !== null ? this.props.ProcessList.names : [];
     if (nextProps.ProcessList.names !== null && !_.isEqual(currentProcessNames.sort(), nextProps.ProcessList.names.sort())) 
     {
-      nextProps.ProcessList.names.forEach((currentValue, index, array) => { dispatch(this.props.doFetchProcess(currentValue)); });
+      // nextProps.ProcessList.names.forEach((currentValue, index, array) => { dispatch(this.props.doFetchProcess(currentValue)); });
     }
   }
 
   shouldComponentUpdate(nextProps) {
     const currentProcessNames = this.props.ProcessList.names !== null ? this.props.ProcessList.names : [];
     const nextProcessNames = nextProps.ProcessList.names !== null ? nextProps.ProcessList.names : [];
-    if (!_.isEqual(currentProcessNames.sort(), nextProcessNames.sort()))
-    {
-      return true;
-    }
-    
-    const currentProcesses = this.props.ProcessByName !== null ? this.props.ProcessByName : [];
-    const nextProcesses = nextProps.ProcessByName !== null ? nextProps.ProcessByName : [];
-    const compareProcesses = (a, b) => {
-        return a.name.localeCompare(b.name);
-    }
-    
-    return !_.isEqual(currentProcesses.sort(compareProcesses), nextProcesses.sort(compareProcesses));
+    return !_.isEqual(currentProcessNames.sort(), nextProcessNames.sort());
   }
   
 }
 
 function mapStateToProps (state, ownProps) {
   return {
-    ProcessList : state.ProcessList,
-    ProcessByName : state.Processes.map( p => { return { name : p.name, status : p.status, isFetching : p.isFetching}; })
+    ProcessList : state.ProcessList
   }
 }
 

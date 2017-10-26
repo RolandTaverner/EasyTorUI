@@ -148,6 +148,21 @@ class OptionViewComponent extends OptionComponentBase {
               </td>
             </tr>) : (null)
           }
+          <tr className='UIFormPair'>
+            <td className='UIFormKey'>
+              <label>Value</label>
+            </td>
+            <td className='UIFormValue'>
+              {
+                Option.value !== undefined ?
+                (
+                  Option.isList ? 
+                    <ListComponent optionName={Option.optionName} attrName={'value'} values={Option.value} />
+                  : Option.value
+                ) : (null)
+              }
+            </td>
+          </tr>
         </tbody>
       </table>
       );

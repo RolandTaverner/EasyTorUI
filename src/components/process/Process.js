@@ -9,15 +9,34 @@ import './Process.css';
 import { doFetchProcess } from '../../actions';
 import Config from '../config/Config';
 
+class ProcessComponentBase extends Component {
 
-class ProcessComponent extends Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.Process === undefined)
+    {
+      nextProps.dispatch(nextProps.doFetchProcess(nextProps.processName));
+    }
+  }
+
+  componentDidMount() {
+    const { dispatch, processName, Process } = this.props;
+
+    if (Process == undefined || (Process.configs === null && !Process.isFetching))
+    {
+      dispatch(this.props.doFetchProcess(processName));
+    }
+  }
+}
+
+class ProcessViewComponent extends ProcessComponentBase {
+
   render() {
     const { Process, processName } = this.props;
 
     return (
       <div className="Process">
-        <div>
-        process {processName}
+        <div className="ProcessHeaders">
+          Configuration process {processName}
         </div>
         <div className="ConfigTabs">
         { Process.configs !== null ?
@@ -33,25 +52,19 @@ class ProcessComponent extends Component {
       </div>
     );
   }
+}
 
-  componentDidMount() {
-    const { dispatch, processName } = this.props;
-    const { isFetching, configs } = this.props.Process;
+class ProcessStateComponent extends ProcessComponentBase {
 
-    if (configs === null && !isFetching)
+  render() {
+    const { Process, processName } = this.props;
+
+    if (Process === undefined || Process.isFetching === true)
     {
-      dispatch(this.props.doFetchProcessList(processName));
+      return (<div>Loading...</div>);
     }
+    return (<div>{Process.state}</div>);
   }
-  
-  componentWillUpdate(nextProps, nextState) {
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const currentConfigNames = this.props.Process.configs !== null ? this.props.Process.configs : [];
-    const nextConfigNames = nextProps.Process.configs !== null ? nextProps.Process.configs : [];
-    return !_.isEqual(currentConfigNames.sort(), nextConfigNames.sort());
-  }  
 }
 
 function mapStateToProps (state, ownProps) {
@@ -65,4 +78,5 @@ function mapDispatchToProps(dispatch) {
   return { ...actions, dispatch };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProcessComponent);
+export const ProcessView = connect(mapStateToProps, mapDispatchToProps)(ProcessViewComponent);
+export const ProcessState = connect(mapStateToProps, mapDispatchToProps)(ProcessStateComponent);
