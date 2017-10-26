@@ -64,7 +64,7 @@ class ProcessListComponent extends Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { isFetching, names } = this.props.ProcessList;
     const { dispatch } = this.props;
 

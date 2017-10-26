@@ -24,7 +24,7 @@ class TorController extends Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { isFetching, pid } = this.props.ControllerInfo;
     const { dispatch } = this.props;
 

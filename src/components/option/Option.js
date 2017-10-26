@@ -53,7 +53,7 @@ class OptionComponentBase extends Component {
     }
   }
   
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch, Option, processName, configName, optionName } = this.props;
 
     if (Option === undefined)

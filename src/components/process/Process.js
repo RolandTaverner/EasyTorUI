@@ -8,6 +8,7 @@ import "react-table/react-table.css";
 import "react-tabs/style/react-tabs.css";
 import "./Process.css";
 import { doFetchProcess, doFetchPostProcessAction } from "../../actions";
+
 import Config from "../config/Config";
 
 class ProcessComponentBase extends Component {
@@ -15,14 +16,14 @@ class ProcessComponentBase extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.Process === undefined)
     {
-      nextProps.dispatch(nextProps.doFetchProcess(nextProps.processName));
+      //nextProps.dispatch(nextProps.doFetchProcess(nextProps.processName));
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch, processName, Process } = this.props;
 
-    if (Process === undefined || (Process.configs === null && !Process.isFetching))
+    if (Process === undefined)
     {
       dispatch(this.props.doFetchProcess(processName));
     }

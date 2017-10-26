@@ -63,7 +63,7 @@ class ConfigComponent extends Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch, Config, processName, configName } = this.props;
 
     if (Config === undefined)

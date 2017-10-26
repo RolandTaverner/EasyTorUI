@@ -30,7 +30,7 @@ export function fetchControllerInfo() {
             dispatch(receiveControllerInfo(jsonResponse.json, jsonResponse.status));
           });
       }).catch(err => {
-        
+        console.log("Fetch failed: ", err.toString());
       });
   };
 }
@@ -116,7 +116,7 @@ export function fetchProcess(name) {
           });
       })
       .catch(err => {
-        
+
       });
   };
 }
