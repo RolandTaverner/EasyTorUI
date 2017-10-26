@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import "./Option.css";
 import { doFetchOption } from "../../actions";
@@ -20,6 +21,12 @@ class CheckboxComponent extends Component {
   }
 }
 
+CheckboxComponent.propTypes = {
+  optionName : PropTypes.string.isRequired,
+  attrName : PropTypes.string.isRequired,
+  checked : PropTypes.bool.isRequired,
+};
+
 class ListComponent extends Component {
   render() {
     const { optionName, attrName, values } = this.props;
@@ -31,6 +38,12 @@ class ListComponent extends Component {
     );  
   }
 }
+
+ListComponent.propTypes = {
+  optionName : PropTypes.string.isRequired,
+  attrName : PropTypes.string.isRequired,
+  values : PropTypes.array.isRequired,
+};
 
 class OptionComponentBase extends Component {
   componentWillReceiveProps(nextProps) {
@@ -55,6 +68,15 @@ class OptionComponentBase extends Component {
     return !_.isEqual(Option, nextProps.Option);
   }  
 }
+
+OptionComponentBase.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchOption : PropTypes.func.isRequired,
+  Option : PropTypes.object,
+  processName : PropTypes.string.isRequired,
+  configName : PropTypes.string.isRequired,
+  optionName : PropTypes.string.isRequired
+};
 
 function mapStateToProps (state, ownProps) {
   return {

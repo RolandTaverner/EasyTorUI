@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import _ from "lodash";
 import "react-table/react-table.css";
@@ -35,6 +36,13 @@ class ProcessComponentBase extends Component {
 
 }
 
+ProcessComponentBase.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchProcess : PropTypes.func.isRequired,
+  Process : PropTypes.object,
+  processName : PropTypes.string.isRequired
+};
+
 class ProcessViewComponent extends ProcessComponentBase {
 
   render() {
@@ -49,10 +57,10 @@ class ProcessViewComponent extends ProcessComponentBase {
           { Process.configs !== null ?
             <Tabs>
               <TabList>
-                {Process.configs.map( (confName, index) =>  { return <Tab key={"Tab" + confName}>{confName}</Tab>;})}
+                { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName}</Tab>)) }
               </TabList>
               <div className="ConfigTabPanel">
-                {Process.configs.map((confName, index) => { return <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel>;})}
+                { Process.configs.map( confName => ( <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel> )) }
               </div>
             </Tabs> : "" }
         </div>

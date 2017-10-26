@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import ReactTable from "react-table";
 import _ from "lodash";
 import "react-table/react-table.css";
@@ -81,6 +82,14 @@ class ConfigComponent extends Component {
     return !_.isEqual(currentOptsNames.sort(), nextOptsNames.sort());
   }  
 }
+
+ConfigComponent.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchConfig : PropTypes.func.isRequired,
+  Config : PropTypes.object,
+  processName : PropTypes.string.isRequired,
+  configName : PropTypes.string.isRequired
+};
 
 function mapStateToProps (state, ownProps) {
   return {

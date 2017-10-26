@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import ReactTable from "react-table";
 import _ from "lodash";
 import "react-table/react-table.css";
@@ -81,6 +82,12 @@ class ProcessListComponent extends Component {
   
 }
 
+ProcessListComponent.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchProcessList : PropTypes.func.isRequired,
+  ProcessList : PropTypes.object
+};
+
 function mapStateToProps (state, ownProps) {
   return {
     ProcessList : state.ProcessList
@@ -88,7 +95,7 @@ function mapStateToProps (state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchProcessList }, dispatch);
+  let actions = bindActionCreators( { doFetchProcessList }, dispatch);
   return { ...actions, dispatch };
 }
 

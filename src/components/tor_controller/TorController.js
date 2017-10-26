@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import PropTypes from "prop-types";
 import "./TorController.css";
 import { doFetchControllerInfo } from "../../actions";
 
@@ -37,6 +38,12 @@ class TorController extends Component {
     return nextProps.ControllerInfo.pid !== this.props.ControllerInfo.pid;
   }  
 }
+
+TorController.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchControllerInfo : PropTypes.func.isRequired,
+  ControllerInfo : PropTypes.object
+};
 
 function mapStateToProps (state, ownProps) {
   return {
