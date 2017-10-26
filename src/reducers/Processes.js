@@ -8,8 +8,14 @@ import {
 } from '../actions'
 
 const Processes = (state = [], action) => {
-  const existingItem = _.find(state, p => { return p.name === action.name; } ) !== undefined ? _.find(state, p => { return p.name === action.name; } ) : {};
+
+  const thisProcess =  p => (p.name === action.name);
+  const notThisProcess = p => (!thisProcess(p));
+
+  const foundItem = _.find(state, thisProcess);
+  const existingItem = foundItem !== undefined ? foundItem : {};
   let newItem = {};
+
   switch (action.type) {
     case REQUEST_PROCESS:
       newItem = Object.assign({}, existingItem,
@@ -20,7 +26,7 @@ const Processes = (state = [], action) => {
           processState : null,
           configs : null
         });
-      return [ ...state.filter(p => (p.name.localeCompare(action.name) !== 0)), newItem ];
+      return [ ...state.filter(notThisProcess), newItem ];
     case RECEIVE_PROCESS:
       newItem = Object.assign({}, existingItem,
         {
@@ -32,7 +38,7 @@ const Processes = (state = [], action) => {
           /*exitCode : action.response.exit_code,
           unexpectedExit = action.response.unexpected_exit*/
         });
-      return [ ...state.filter(p => (p.name.localeCompare(action.name) !== 0)), newItem ];
+      return [ ...state.filter(notThisProcess), newItem ];
     case POST_PROCESS_ACTION:
       newItem = Object.assign({}, existingItem,
         {
@@ -41,7 +47,7 @@ const Processes = (state = [], action) => {
           name : action.name,
           actionResult : null
         });
-      return [ ...state.filter(p => (p.name.localeCompare(action.name) !== 0)), newItem ];
+      return [ ...state.filter(notThisProcess), newItem ];
     case RECEIVE_PROCESS_ACTION_RESULT:
       newItem = Object.assign({}, existingItem,
         {
@@ -50,7 +56,7 @@ const Processes = (state = [], action) => {
           name : action.name,
           actionResult : action.response.status
         });
-      return [ ...state.filter(p => (p.name.localeCompare(action.name) !== 0)), newItem ];
+      return [ ...state.filter(notThisProcess), newItem ];
     default:
       return state;
   }};

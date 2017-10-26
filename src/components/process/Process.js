@@ -43,7 +43,7 @@ class ProcessViewComponent extends ProcessComponentBase {
     return (
       <div className="Process">
         <div className="ProcessHeaders">
-          Configuration process {processName}
+          CONFIGURATIONS
         </div>
         <div className="ConfigTabs">
         { Process.configs !== null ?

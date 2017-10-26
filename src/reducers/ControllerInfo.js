@@ -9,7 +9,7 @@ const ControllerInfo = (state = {}, action) => {
       return Object.assign({}, state, 
         { 
           isFetching : true,
-          fetchError : null,
+          error : null,
           pid : null
         }
       );
@@ -17,7 +17,7 @@ const ControllerInfo = (state = {}, action) => {
       return Object.assign({}, state, 
         { 
           isFetching : false,
-          fetchError : action.status === 200 ? null : action.response,
+          error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null},
           pid : action.response.PID
         }
       );

@@ -1,33 +1,40 @@
+import _ from 'lodash';
+
 import {
   REQUEST_OPTION,
   RECEIVE_OPTION
 } from '../actions'
 
+
 const Options = (state = [], action) => {
+
+  const thisOption = opt => (opt.configName.localeCompare(action.configName) === 0
+                                && opt.processName.localeCompare(action.processName) === 0
+                                && opt.optionName.localeCompare(action.optionName) === 0);
+  const notThisOption = opt => (!thisOption(opt));
+
+  const foundItem = _.find(state, thisOption);
+  const existingItem = foundItem !== undefined ? foundItem : {};
+  let newItem = {};
+
   switch (action.type) {
     case REQUEST_OPTION:
-      return [
-        ...state.filter(opt => (!(opt.configName.localeCompare(action.configName) === 0
-                                && opt.processName.localeCompare(action.processName) === 0
-                                && opt.optionName.localeCompare(action.optionName) === 0))),
+      newItem = Object.assign({}, existingItem,
         {
           isFetching : true,
-          fetchError : null,
+          error : null,
           processName : action.processName,
           configName : action.configName,
           optionName : action.optionName,
-          presentation : null
-        }
-      ];
+          presentation : null,
+          value : null
+        });
+      return [ ...state.filter(notThisOption), newItem ];
     case RECEIVE_OPTION:
-      return [
-        ...state.filter(opt => (!(opt.configName.localeCompare(action.configName) === 0
-                                && opt.processName.localeCompare(action.processName) === 0
-                                && opt.optionName.localeCompare(action.optionName) === 0))),
+      newItem = Object.assign({}, existingItem,
         {
           isFetching : false,
-          fetchError : action.status === 200 ? null : action.response,
-          status : action.status,
+          error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null },
           processName : action.processName,
           configName : action.configName,
           optionName : action.optionName,
@@ -39,8 +46,8 @@ const Options = (state = [], action) => {
           domain : action.response.domain,
           value : action.response.value,
           defaultValue : action.response.default_value
-        }
-      ];
+        });
+      return [ ...state.filter(notThisOption), newItem ];
     default:
       return state;
   }};

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import 'react-table/react-table.css';
 import './ProcessList.css';
 import { ProcessView, ProcessState, ProcessActions } from '../process/Process';
-import { doFetchProcessList, doFetchProcess } from '../../actions';
+import { doFetchProcessList } from '../../actions';
 
 
 class ProcessListComponent extends Component {
@@ -44,7 +44,7 @@ class ProcessListComponent extends Component {
     
     return (
       <div className="Processes">
-        <div className="ProcessesHeader">Process management</div>
+        <div className="ProcessesHeader">PROCESSES</div>
         <div className="ProcessesTable">
           <ReactTable
             data={data}
@@ -90,7 +90,7 @@ function mapStateToProps (state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchProcessList, doFetchProcess }, dispatch);
+  let actions = bindActionCreators({ doFetchProcessList }, dispatch);
   return { ...actions, dispatch };
 }
 
