@@ -34,7 +34,6 @@ class ProcessComponentBase extends Component {
   
     return !_.isEqual(Process, nextProps.Process);
   }  
-
 }
 
 ProcessComponentBase.propTypes = {
@@ -70,11 +69,54 @@ class ProcessStateComponent extends ProcessComponentBase {
   render() {
     const { Process } = this.props;
 
+    const basicStyle = {
+      textAlign : "center",
+      display : "inline-block",
+      padding : "3px 4px",
+      fontSize : "14px",
+      fontWeight : "600",
+      lineHeight : "1.2",
+      borderRadius : "2px",
+      verticalAlign : "middle",
+      boxShadow : "inset 0 -1px 0 rgba(27,31,35,0.12)",
+      width : "100%"
+    };
+
+    const startingStyle = Object.assign({}, basicStyle,
+      {
+        color: "#1c2733",
+        backgroundColor: "#84b6eb",
+      });
+
+    const runningStyle = Object.assign({}, basicStyle,
+      {
+        color: "#fff",
+        backgroundColor: "#128A0C"
+      });
+
+    const stoppingStyle = Object.assign({}, basicStyle,
+      {
+        color: "#fff",
+        backgroundColor: "#cc317c"
+      });
+
+    const stoppedStyle = Object.assign({}, basicStyle,
+      {
+        color: "#333333",
+        backgroundColor: "#cccccc"
+      });
+
+    let styles = {};
+    styles["starting"] = startingStyle;
+    styles["running"] = runningStyle;
+    styles["stopping"] = stoppingStyle;
+    styles["stopped"] = stoppedStyle;
+
     if (Process === undefined || Process.isFetching === true)
     {
-      return (<div>Loading...</div>);
+      return (<div style={stoppedStyle}>Loading...</div>);
     }
-    return (<div>{Process.processState}</div>);
+    return (<div style={styles[Process.processState]}>{Process.processState.toUpperCase()}</div>);
   }
 }
 
