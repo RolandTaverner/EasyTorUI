@@ -98,7 +98,13 @@ class OptionPresentationComponent extends OptionComponentBase {
     {
       return (<div>Loading...</div>);
     }
-    return (<div>{Option.presentation}</div>);
+    if (Option.presentation === undefined || Option.presentation === null)
+    {
+      return <div/>;
+    }
+    
+    const items = Option.presentation.split(/(?:\\[rn]|[\r\n]+)+/).map((i, index) => <p className="PresentationItem" key={index}>{i}</p>);
+    return items;
   }
 }
 

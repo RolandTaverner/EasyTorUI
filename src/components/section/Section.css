@@ -1,0 +1,29 @@
+.Section {
+  margin: 15px;
+  padding: 0px;
+  border: 1px solid #73AD21;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.SectionHeader {
+  height : 30px;
+  margin: auto;
+  padding: 0px;
+  font-weight: bold;
+  text-align: left;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  background-color: #d0e0fc;
+  border: 1px solid #d0e0fc;
+}
+
+.SectionHeaderText {
+  margin: auto;
+  padding-left: 15px;
+  padding-top: 7px;
+}
+
+.SectionContents {
+  margin: 10px;
+}

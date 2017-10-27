@@ -14,23 +14,22 @@ class ConfigComponent extends Component {
     const { processName, configName, Config } = this.props;
     let data = [];
 
-    if (Config !== undefined)
+    if (Config !== undefined && Config.options !== null)
     {
-      if (Config.options !== null)
-      {
-        data = Config.options.map( optName => { return { name : optName};});
-      }
+      data = Config.options.map( optName => { return { name : optName};});
     }
     const columns = [
       {
         Header: "Name",
         id : "name",
         accessor: d => d.name,
-        width: 200
+        width: 200,
+        headerStyle: { "fontWeight": "bold"}
       },
       {
         Header: "Presentation",
         id : "presentation",
+        headerStyle: { "fontWeight": "bold"},
         Cell : row => (
           <OptionPresentation processName={processName} configName={configName} optionName={row.original.name} />
         )
@@ -93,7 +92,7 @@ ConfigComponent.propTypes = {
 
 function mapStateToProps (state, ownProps) {
   return {
-    Config : _.find(state.Configs, c => { return c.processName === ownProps.processName && c.configName === ownProps.configName; } ),
+    Config : _.find(state.Configs, c => { return c.processName === ownProps.processName && c.configName === ownProps.configName; } )
   };
 }
 

@@ -50,21 +50,16 @@ class ProcessViewComponent extends ProcessComponentBase {
     const { Process, processName } = this.props;
 
     return (
-      <div className="Process">
-        <div className="ProcessHeaders">
-          CONFIGURATIONS
-        </div>
-        <div className="ConfigTabs">
-          { Process.configs !== null ?
-            <Tabs>
-              <TabList>
-                { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName}</Tab>)) }
-              </TabList>
-              <div className="ConfigTabPanel">
-                { Process.configs.map( confName => ( <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel> )) }
-              </div>
-            </Tabs> : "" }
-        </div>
+      <div className="ConfigTabs">
+        { Process.configs !== null ?
+          <Tabs>
+            <TabList>
+              { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName}</Tab>)) }
+            </TabList>
+            <div className="ConfigTabPanel">
+              { Process.configs.map( confName => ( <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel> )) }
+            </div>
+          </Tabs> : "" }
       </div>
     );
   }

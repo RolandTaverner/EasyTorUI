@@ -1,41 +1,28 @@
-.Process {
-  margin: 5px;
-  margin-left: 35px;
-  margin-right: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #d7d7dF;
-  background-color: #F7F7FF;
-  float: left;
-}
-
-.ProcessHeaders {
-  margin: 10px;
-  font-weight: bold;
-}
-
 .ConfigTabs {
-  margin: 0px;
+  margin: auto;
 }
 
 .ConfigTabPanel {
   margin: 1px;
-    /*border: 1px solid #000000;*/
 }
 
 .ProcessButtons {
   
 }
+
 .ProcessButton {
   margin-right: 5px;
   margin-left: 5px;
 }
+
 .RefreshProcessButton {
   
 }
+
 .StartProcessButton {
   
 }
+
 .StopProcessButton {
   
 }

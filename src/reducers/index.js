@@ -4,6 +4,7 @@ import ProcessList from "./ProcessList.js";
 import Processes from "./Processes.js";
 import Configs from "./Configs.js";
 import Options from "./Options.js";
+import PresetList from "./PresetList.js";
 import Presets from "./Presets.js";
 
 const TorControllerReducers = combineReducers({
@@ -12,49 +13,31 @@ const TorControllerReducers = combineReducers({
   Processes : Processes,
   Configs : Configs,
   Options : Options,
+  PresetList : PresetList,
   Presets : Presets
 });
 
 const initialState = {
   ControllerInfo : {
     isFetching : false,
-    fetchError : null,
+    error : null,
     pid : null
   },
   ProcessList : {
     isFetching : false,
-    fetchError : null,
-    names : null //["tor", "privoxy"]
+    error : null,
+    names : null
   },
-
-  Processes: [
-  /*{
-    isFetching : false,
-    fetchError : null,
-    name : "",
-    status  : "",
-    configs: [],
-    exitCode = 0,
-    unexpectedExit = false
-  }*/],
+  Processes: [],
   Configs : [],
   Options : [],
+
+  PresetList : {
+    isFetching : false,
+    error : null,
+    names : null 
+  },
   Presets : [],
 };
-
-/*
-{
-  ControllerInfo : { pid : 0 },
-  Processes : [ "tor", "privoxy" ],
-  ProcessesByName: [
-    {
-      name : "tor",
-      status: "running"
-    }
-  ],
-
-  Presets : [],
-};
-*/
 
 export { TorControllerReducers, initialState };

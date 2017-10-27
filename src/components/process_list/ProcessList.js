@@ -8,6 +8,7 @@ import "react-table/react-table.css";
 import "./ProcessList.css";
 import { ProcessView, ProcessState, ProcessActions } from "../process/Process";
 import { doFetchProcessList } from "../../actions";
+import Section from "../section/Section";
 
 
 class ProcessListComponent extends Component {
@@ -24,17 +25,20 @@ class ProcessListComponent extends Component {
         Header: "Process",
         id : "name",
         accessor: d => d.name,
-        width: 100
+        width: 100,
+        headerStyle: { "fontWeight": "bold"}
       },
       {
         Header: "Status",
         id : "status",
         width: 100,
+        headerStyle: { "fontWeight": "bold"},
         Cell : row => ( <ProcessState processName={row.original.name} /> )
       },
       {
         Header: "",
         id : "actions",
+        headerStyle: { "fontWeight": "bold"},
         Cell : row => (
           <ProcessActions processName={row.original.name} />
         )
@@ -42,8 +46,8 @@ class ProcessListComponent extends Component {
     ];
     
     return (
-      <div className="Processes">
-        <div className="ProcessesHeader">PROCESSES</div>
+      <div>
+        <div></div>
         <div className="ProcessesTable">
           <ReactTable
             data={data}
@@ -54,7 +58,11 @@ class ProcessListComponent extends Component {
             SubComponent={
               row => {
                 return (
-                  <ProcessView processName={row.original.name} />
+                  <div className="ProcessSectionContainer">
+                    <Section headerText="CONFIGURATIONS" bgColor="#FAFAFF">
+                      <ProcessView processName={row.original.name} />
+                    </Section>
+                  </div>
                 );
               }
             }

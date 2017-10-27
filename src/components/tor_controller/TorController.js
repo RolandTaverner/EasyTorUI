@@ -5,21 +5,28 @@ import PropTypes from "prop-types";
 import "./TorController.css";
 import { doFetchControllerInfo } from "../../actions";
 
+import PresetList from "../preset_list/PresetList";
 import ProcessList from "../process_list/ProcessList";
+import Section from "../section/Section";
 
 class TorController extends Component {
   render() {
     const { ControllerInfo } = this.props;
     return (
       <div className="Controller">
-        <div className="ControllerInfo">
+        <Section headerText="CONTROLLER" bgColor="#F0FFF0">
           <p className="App-intro">
             PID = { ControllerInfo.pid === null ? "Loading..." : ControllerInfo.pid }
           </p>
-        </div>
-        <div>
+        </Section>
+
+        <Section headerText="PRESETS" bgColor="#F0FFF0">
+          {ControllerInfo.pid === null ? "" : (<PresetList />)}
+        </Section>
+
+        <Section headerText="PROCESSES" bgColor="#F0FFF0">
           {ControllerInfo.pid === null ? "" : (<ProcessList />)}
-        </div>
+        </Section>
       </div>
     );
   }

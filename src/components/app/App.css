@@ -1,33 +1,41 @@
+.Wrapper {
+  text-align: center;
+}
+
 .App {
+  display: inline-block;
   text-align: left;
+}
+
+.App-header {
+  background-color: #E0E0E0;
+  height: 50px;
+  width: 970px;
+  line-height: 50px;  
+  color: black;
+  text-align: left;
+  margin-left: 15px;
 }
 
 .App-logo {
   height: 50px;
   float: left;
   vertical-align: middle;
-  padding-right: 20px;
-}
-
-.App-header {
-  /* background-color: #222;*/
-  height: 50px;
-  line-height: 50px;  
-  color: black;
-  text-align: left;
+  margin-right: 20px;
+  margin-left: 18px;
 }
 
 .App-title {
   display: inline-block;
   vertical-align: middle;
-  line-height: normal;
 }
 
 .App-title-text {
-  font-size: 1.2em;
+  font-size: 2.0em;
+  margin: 0;
+  padding : 0;
+  line-height: 1.0;
   text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.App-intro {
-  font-size: large;
-}
