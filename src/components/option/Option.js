@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import "./Option.css";
-import { doFetchOption } from "../../actions";
+import { doFetchOption } from "../../actions/Option";
 
 
 class CheckboxComponent extends Component {

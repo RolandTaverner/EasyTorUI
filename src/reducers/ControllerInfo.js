@@ -1,7 +1,7 @@
 import {
   REQUEST_CONTROLLERINFO,
   RECEIVE_CONTROLLERINFO
-} from "../actions";
+} from "../actions/ControllerInfo";
 
 const ControllerInfo = (state = {}, action) => {
   switch (action.type) {

@@ -1,7 +1,7 @@
 import {
   REQUEST_PRESETLIST,
   RECEIVE_PRESETLIST
-} from "../actions";
+} from "../actions/Presets";
 
 const PresetList = (state = [], action) => {
   switch (action.type) {

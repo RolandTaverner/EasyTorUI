@@ -1,7 +1,7 @@
 import {
   REQUEST_PROCESSLIST,
   RECEIVE_PROCESSLIST
-} from "../actions";
+} from "../actions/ProcessList";
 
 const ProcessList = (state = [], action) => {
   switch (action.type) {

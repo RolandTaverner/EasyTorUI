@@ -6,7 +6,7 @@ import ReactTable from "react-table";
 import _ from "lodash";
 import "react-table/react-table.css";
 import "./Config.css";
-import { doFetchConfig } from "../../actions";
+import { doFetchConfig } from "../../actions/Config";
 import { OptionPresentation, OptionView } from "../option/Option";
 
 class ConfigComponent extends Component {

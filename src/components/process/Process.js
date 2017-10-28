@@ -7,9 +7,10 @@ import _ from "lodash";
 import "react-table/react-table.css";
 import "react-tabs/style/react-tabs.css";
 import "./Process.css";
-import { doFetchProcess, doFetchPostProcessAction } from "../../actions";
+import { doFetchProcess, doFetchPostProcessAction } from "../../actions/Process";
 
 import Config from "../config/Config";
+import Log from "../process_log/ProcessLog";
 
 class ProcessComponentBase extends Component {
 
@@ -34,6 +35,12 @@ class ProcessComponentBase extends Component {
   
     return !_.isEqual(Process, nextProps.Process);
   }  
+
+  reloadProcessInfo() {
+    const { dispatch, processName } = this.props;
+    dispatch(this.props.doFetchProcess(processName));
+  }
+
 }
 
 ProcessComponentBase.propTypes = {
@@ -51,12 +58,14 @@ class ProcessViewComponent extends ProcessComponentBase {
     return (
       <div className="ConfigTabs">
         { Process.configs !== null ?
-          <Tabs>
+          <Tabs style={{height: "100%", display : "block", overflow: "auto"}}>
             <TabList>
-              { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName}</Tab>)) }
+              { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName} options</Tab>)) }
+              <Tab key={"TabLog"}>Log</Tab>
             </TabList>
             <div className="ConfigTabPanel">
               { Process.configs.map( confName => ( <TabPanel key={"TabPanel" + confName}> <Config processName={processName} configName={confName}/> </TabPanel> )) }
+              <TabPanel key={"TabPanelLog"}> <Log processName={processName}/> </TabPanel>
             </div>
           </Tabs> : "" }
       </div>
@@ -125,7 +134,7 @@ class ProcessActionsComponent extends ProcessComponentBase {
   render() {
     const { dispatch, Process, processName } = this.props;
     let buttons = [];
-    buttons.push(<button className="ProcessButton RefreshProcessButton" key={processName + "Refresh"} onClick={() => { dispatch(this.props.doFetchProcess(processName)); } }>Refresh</button>);
+    buttons.push(<button className="ProcessButton RefreshProcessButton" key={processName + "Refresh"} onClick={() => { this.reloadProcessInfo(); } }>Refresh</button>);
 
     if (Process !== undefined && Process.processState !== null)
     {
@@ -140,6 +149,8 @@ class ProcessActionsComponent extends ProcessComponentBase {
     }
     return ( <div className="ProcessButtons"> {buttons} </div> );
   }
+
+
 }
 
 function mapStateToProps (state, ownProps) {

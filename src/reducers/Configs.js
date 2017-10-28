@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
   REQUEST_CONFIG,
   RECEIVE_CONFIG
-} from "../actions";
+} from "../actions/Config";
 
 const Configs = (state = [], action) => {
 

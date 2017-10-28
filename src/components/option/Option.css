@@ -78,17 +78,18 @@
   margin: auto;
   padding: 0px;
   list-style-type: none;
+  line-height: 1.0em;
 }
 .UIFormValueListItem {
   position: relative;
   z-index: 10;
   padding: 5px 5px;
-  background-color: #F7F7F0;
+  background-color: #FFFFF0;
   margin: 2px;
 }
 
 .PresentationItem {
   margin: 0;
   padding : 0;
-  line-height: 1.0;
+  line-height: 1.5em;
 }

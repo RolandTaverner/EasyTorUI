@@ -7,7 +7,7 @@ import _ from "lodash";
 import "react-table/react-table.css";
 import "./ProcessList.css";
 import { ProcessView, ProcessState, ProcessActions } from "../process/Process";
-import { doFetchProcessList } from "../../actions";
+import { doFetchProcessList } from "../../actions/ProcessList";
 import Section from "../section/Section";
 
 
@@ -59,7 +59,7 @@ class ProcessListComponent extends Component {
               row => {
                 return (
                   <div className="ProcessSectionContainer">
-                    <Section headerText="CONFIGURATIONS" bgColor="#FAFAFF">
+                    <Section headerText="PROCESS DETAILS" bgColor="#FAFAFF">
                       <ProcessView processName={row.original.name} />
                     </Section>
                   </div>

@@ -1,5 +1,7 @@
 .ConfigTabs {
   margin: auto;
+  display: block;
+  overflow: auto;
 }
 
 .ConfigTabPanel {

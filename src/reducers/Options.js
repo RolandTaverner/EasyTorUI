@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
   REQUEST_OPTION,
   RECEIVE_OPTION
-} from "../actions";
+} from "../actions/Option";
 
 
 const Options = (state = [], action) => {

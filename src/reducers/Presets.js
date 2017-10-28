@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
   REQUEST_PRESETGROUP,
   RECEIVE_PRESETGROUP
-} from "../actions";
+} from "../actions/Presets";
 
 const Presets = (state = [], action) => {
 

@@ -6,6 +6,7 @@ import Configs from "./Configs.js";
 import Options from "./Options.js";
 import PresetList from "./PresetList.js";
 import Presets from "./Presets.js";
+import Logs from "./Logs.js";
 
 const TorControllerReducers = combineReducers({
   ControllerInfo : ControllerInfo,
@@ -14,7 +15,8 @@ const TorControllerReducers = combineReducers({
   Configs : Configs,
   Options : Options,
   PresetList : PresetList,
-  Presets : Presets
+  Presets : Presets,
+  Logs : Logs
 });
 
 const initialState = {
@@ -38,6 +40,7 @@ const initialState = {
     names : null 
   },
   Presets : [],
+  Logs : []
 };
 
 export { TorControllerReducers, initialState };

@@ -5,7 +5,7 @@ import {
   RECEIVE_PROCESS,
   POST_PROCESS_ACTION,
   RECEIVE_PROCESS_ACTION_RESULT
-} from "../actions";
+} from "../actions/Process";
 
 const Processes = (state = [], action) => {
 

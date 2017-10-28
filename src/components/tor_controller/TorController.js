@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import "./TorController.css";
-import { doFetchControllerInfo } from "../../actions";
+import { doFetchControllerInfo } from "../../actions/ControllerInfo";
 
 import PresetList from "../preset_list/PresetList";
 import ProcessList from "../process_list/ProcessList";
