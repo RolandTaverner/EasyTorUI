@@ -1,4 +1,5 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError } from "./Helpers";
 
 /*******************************************************************************
   ProcessLog
@@ -22,6 +23,18 @@ export function receiveProcessLog(name, json, status) {
   };
 }
 
+export const RECEIVE_PROCESS_LOG_ERROR = "RECEIVE_PROCESS_LOG_ERROR";
+export function receiveProcessLogError(name, error) {
+  return {
+    type : RECEIVE_PROCESS_LOG_ERROR,
+    name : name,
+    response : null,
+    status : null,
+    error: error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchProcessLog(name) {
   return dispatch => {
     dispatch(requestProcessLog(name));
@@ -33,7 +46,7 @@ export function fetchProcessLog(name) {
           });
       })
       .catch(err => {
-
+        dispatch(receiveProcessLogError(name, createGenericError(err)));
       });
   };
 }

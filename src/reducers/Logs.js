@@ -2,7 +2,8 @@ import _ from "lodash";
 
 import {
   REQUEST_PROCESS_LOG,
-  RECEIVE_PROCESS_LOG
+  RECEIVE_PROCESS_LOG,
+  RECEIVE_PROCESS_LOG_ERROR
 } from "../actions/Log";
 
 const Logs = (state = [], action) => {
@@ -31,6 +32,15 @@ const Logs = (state = [], action) => {
         error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null},
         processName : action.name,
         log : action.response
+      });
+    return [ ...state.filter(notThisProcessLog), newItem ];
+  case RECEIVE_PROCESS_LOG_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.error,
+        processName : action.name,
+        log : null
       });
     return [ ...state.filter(notThisProcessLog), newItem ];
   default:

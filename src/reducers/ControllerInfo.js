@@ -1,6 +1,7 @@
 import {
   REQUEST_CONTROLLERINFO,
-  RECEIVE_CONTROLLERINFO
+  RECEIVE_CONTROLLERINFO,
+  RECEIVE_CONTROLLERINFO_ERROR
 } from "../actions/ControllerInfo";
 
 const ControllerInfo = (state = {}, action) => {
@@ -21,9 +22,16 @@ const ControllerInfo = (state = {}, action) => {
         pid : action.response.PID
       }
     );
+  case RECEIVE_CONTROLLERINFO_ERROR:
+    return Object.assign({}, state, 
+      { 
+        isFetching : false,
+        error : action.error,
+        pid : null
+      }
+    );
   default:
     return state;
   }};
 
 export default ControllerInfo;
-

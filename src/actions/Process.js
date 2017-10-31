@@ -1,4 +1,6 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError, delay } from "./Helpers";
+import { fetchProcessLog } from "./Log";
 
 /*******************************************************************************
   Processes
@@ -22,6 +24,17 @@ export function receiveProcess(name, json, status) {
   };
 }
 
+export const RECEIVE_PROCESS_ERROR = "RECEIVE_PROCESS_ERROR";
+export function receiveProcessError(name, error) {
+  return {
+    type : RECEIVE_PROCESS_ERROR,
+    name : name,
+    response : null,
+    status : null,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
 export function fetchProcess(name) {
   return dispatch => {
     dispatch(requestProcess(name));
@@ -33,7 +46,7 @@ export function fetchProcess(name) {
           });
       })
       .catch(err => {
-
+        dispatch(receiveProcessError(name, createGenericError(name, err)));
       });
   };
 }
@@ -61,8 +74,22 @@ export function receiveProcessActionResult(name, action, json, status) {
   return {
     type : RECEIVE_PROCESS_ACTION_RESULT,
     name : name,
+    action : action,
     response : json,
     status : status,
+    receivedAt : Date.now()
+  };
+}
+
+export const RECEIVE_PROCESS_ACTION_RESULT_ERROR = "RECEIVE_PROCESS_ACTION_RESULT_ERROR";
+export function receiveProcessActionResultError(name, action, error) {
+  return {
+    type : RECEIVE_PROCESS_ACTION_RESULT_ERROR,
+    name : name,
+    action : action,
+    response : null,
+    status : null,
+    error : error,
     receivedAt : Date.now()
   };
 }
@@ -87,10 +114,16 @@ export function fetchPostProcessAction(name, action) {
       response.json().then( data => { return {json: data, status: response.status};} )
         .then(jsonResponse => {
           dispatch(receiveProcessActionResult(name, action, jsonResponse.json, jsonResponse.status));
+          return true;
+        })
+        .then(delay(250))
+        .then(() => {
+          fetchProcess(name)(dispatch);
+          fetchProcessLog(name)(dispatch);
         });
     })
       .catch(err => {
-        
+        dispatch(receiveProcessActionResultError(name, action, err));
       });
   };
 }

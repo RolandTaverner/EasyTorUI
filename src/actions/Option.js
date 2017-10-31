@@ -1,4 +1,5 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError } from "./Helpers";
 
 /*******************************************************************************
   Options
@@ -26,6 +27,20 @@ export function receiveOption(processName, configName, optionName, json, status)
   };
 }
 
+export const RECEIVE_OPTION_ERROR = "RECEIVE_OPTION_ERROR";
+export function receiveOptionError(processName, configName, optionName, error) {
+  return {
+    type : RECEIVE_OPTION_ERROR,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    response : null,
+    status : null,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchOption(processName, configName, optionName) {
   return dispatch => {
     dispatch(requestOption(processName, configName, optionName));
@@ -37,7 +52,7 @@ export function fetchOption(processName, configName, optionName) {
           });
       })
       .catch(err => {
-        
+        dispatch(receiveOptionError(processName, configName, optionName, createGenericError(err)));
       });
   };
 }

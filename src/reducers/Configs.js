@@ -2,7 +2,8 @@ import _ from "lodash";
 
 import {
   REQUEST_CONFIG,
-  RECEIVE_CONFIG
+  RECEIVE_CONFIG,
+  RECEIVE_CONFIG_ERROR
 } from "../actions/Config";
 
 const Configs = (state = [], action) => {
@@ -33,6 +34,16 @@ const Configs = (state = [], action) => {
         processName : action.processName,
         configName : action.configName,
         options : action.response.options
+      });
+    return [ ...state.filter(notThisConfig), newItem ];
+  case RECEIVE_CONFIG_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.error,
+        processName : action.processName,
+        configName : action.configName,
+        options : null
       });
     return [ ...state.filter(notThisConfig), newItem ];
   default:

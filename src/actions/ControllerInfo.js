@@ -1,4 +1,5 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError } from "./Helpers";
 
 /*******************************************************************************
   Controller info
@@ -20,6 +21,15 @@ export function receiveControllerInfo(json, status) {
   };
 }
 
+export const RECEIVE_CONTROLLERINFO_ERROR = "RECEIVE_CONTROLLERINFO_ERROR";
+export function receiveControllerInfoError(error) {
+  return {
+    type : RECEIVE_CONTROLLERINFO_ERROR,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchControllerInfo() {
   return dispatch => {
     dispatch(requestControllerInfo());
@@ -30,7 +40,7 @@ export function fetchControllerInfo() {
             dispatch(receiveControllerInfo(jsonResponse.json, jsonResponse.status));
           });
       }).catch(err => {
-        console.log("Fetch failed: ", err.toString());
+        dispatch(receiveControllerInfoError( createGenericError(err) ));
       });
   };
 }

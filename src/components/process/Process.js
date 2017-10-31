@@ -10,6 +10,7 @@ import "./Process.css";
 import { doFetchProcess, doFetchPostProcessAction } from "../../actions/Process";
 
 import Config from "../config/Config";
+import Error from "../error/Error";
 import Log from "../process_log/ProcessLog";
 
 class ProcessComponentBase extends Component {
@@ -124,6 +125,10 @@ class ProcessStateComponent extends ProcessComponentBase {
     if (Process === undefined || Process.isFetching === true)
     {
       return (<div style={stoppedStyle}>Loading...</div>);
+    }
+    else if (Process.error !== null)
+    {
+     return (<Error error={Process.error} />); 
     }
     return (<div style={styles[Process.processState]}>{Process.processState.toUpperCase()}</div>);
   }

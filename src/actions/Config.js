@@ -1,4 +1,5 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError } from "./Helpers";
 
 /*******************************************************************************
   Configs
@@ -24,6 +25,19 @@ export function receiveConfig(processName, configName, json, status) {
   };
 }
 
+export const RECEIVE_CONFIG_ERROR = "RECEIVE_CONFIG_ERROR";
+export function receiveConfigError(processName, configName, error) {
+  return {
+    type : RECEIVE_CONFIG_ERROR,
+    processName : processName,
+    configName : configName,
+    response : null,
+    status : null,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchConfig(processName, configName) {
   return dispatch => {
     dispatch(requestConfig(processName, configName));
@@ -35,7 +49,7 @@ export function fetchConfig(processName, configName) {
           });
       })
       .catch(err => {
-        
+        dispatch(receiveConfigError(processName, configName, createGenericError(err)));
       });
   };
 }

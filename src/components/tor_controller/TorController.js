@@ -12,6 +12,16 @@ import Section from "../section/Section";
 class TorController extends Component {
   render() {
     const { ControllerInfo } = this.props;
+    if (ControllerInfo.error !== null)
+    {
+      return (
+        <Section headerText="CONTROLLER" bgColor="#F0FFF0">
+          <p className="App-intro">
+            Error: {ControllerInfo.error.toString()}
+          </p>
+        </Section>);
+    }
+
     return (
       <div className="Controller">
         <Section headerText="CONTROLLER" bgColor="#F0FFF0">
@@ -40,10 +50,6 @@ class TorController extends Component {
       dispatch(this.props.doFetchControllerInfo());
     }
   }
-
-  shouldComponentUpdate(nextProps) {
-    return nextProps.ControllerInfo.pid !== this.props.ControllerInfo.pid;
-  }  
 }
 
 TorController.propTypes = {

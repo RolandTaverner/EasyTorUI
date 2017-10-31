@@ -2,7 +2,8 @@ import _ from "lodash";
 
 import {
   REQUEST_OPTION,
-  RECEIVE_OPTION
+  RECEIVE_OPTION,
+  RECEIVE_OPTION_ERROR
 } from "../actions/Option";
 
 
@@ -46,6 +47,24 @@ const Options = (state = [], action) => {
         domain : action.response.domain,
         value : action.response.value,
         defaultValue : action.response.default_value
+      });
+    return [ ...state.filter(notThisOption), newItem ];
+  case RECEIVE_OPTION_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.error,
+        processName : action.processName,
+        configName : action.configName,
+        optionName : action.optionName,
+        presentation : null,
+        isSystem : null,
+        isRequired : null,
+        valueType : null,
+        isList : null,
+        domain : null,
+        value : null,
+        defaultValue : null
       });
     return [ ...state.filter(notThisOption), newItem ];
   default:

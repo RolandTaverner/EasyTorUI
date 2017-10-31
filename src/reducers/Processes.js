@@ -3,8 +3,10 @@ import _ from "lodash";
 import {
   REQUEST_PROCESS,
   RECEIVE_PROCESS,
+  RECEIVE_PROCESS_ERROR,
   POST_PROCESS_ACTION,
-  RECEIVE_PROCESS_ACTION_RESULT
+  RECEIVE_PROCESS_ACTION_RESULT,
+  RECEIVE_PROCESS_ACTION_RESULT_ERROR
 } from "../actions/Process";
 
 const Processes = (state = [], action) => {
@@ -39,6 +41,18 @@ const Processes = (state = [], action) => {
         unexpectedExit = action.response.unexpected_exit*/
       });
     return [ ...state.filter(notThisProcess), newItem ];
+  case RECEIVE_PROCESS_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.error,
+        name : action.name,
+        processState : null,
+        configs : null
+        /*exitCode : action.response.exit_code,
+        unexpectedExit = action.response.unexpected_exit*/
+      });
+    return [ ...state.filter(notThisProcess), newItem ];
   case POST_PROCESS_ACTION:
     newItem = Object.assign({}, existingItem,
       {
@@ -55,6 +69,15 @@ const Processes = (state = [], action) => {
         error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null},
         name : action.name,
         actionResult : action.response.status
+      });
+    return [ ...state.filter(notThisProcess), newItem ];
+  case RECEIVE_PROCESS_ACTION_RESULT_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : action.error,
+        name : action.name,
+        actionResult : null
       });
     return [ ...state.filter(notThisProcess), newItem ];
   default:
