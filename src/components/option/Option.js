@@ -3,9 +3,161 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import "./Option.css";
-import { doFetchOption } from "../../actions/Option";
 
+import Select from "react-select";
+import "react-select/dist/react-select.css";
+
+import "./Option.css";
+import { doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue } from "../../actions/Option";
+
+class ValueEditorComponent extends Component {
+
+  onSaveValue(newValue) {
+    this.props.onSaveValue(newValue);
+  }
+}
+
+ValueEditorComponent.propTypes = {
+  optionName : PropTypes.string.isRequired,
+  onSaveValue : PropTypes.func.isRequired,
+  domain : PropTypes.array
+};
+
+class SingleValueEditorComponent extends ValueEditorComponent
+{
+  constructor(props) {
+    super(props);
+    this.state = 
+      {
+        newValue : this.props.initialValue,
+        changed : false
+      };
+  }
+
+  handleOnChange (newValue) {
+    console.log("newValue = ", newValue);
+    this.setState( { newValue : newValue, changed : true } );
+  }
+
+  handleSaveButtonPress() {
+    const { newValue, changed } = this.state;
+    const { onSaveValue } = this.props;
+    if (changed) {
+      onSaveValue(newValue);
+    }
+  }
+
+  render() {
+    const { domain, initialValue } = this.props;
+    const { newValue, changed } = this.state;
+    const selectValue = changed  ? newValue : initialValue;
+
+    const selectOptions = domain ? domain.map(e => { return {value : e, label : e }; }) : [];
+
+    return (
+      <div className="ValueEditorComponent">
+        <div className="ListValueEditorValue">
+          {
+            domain !== null ? 
+              (
+                <Select
+                  name="ListValueEditor"
+                  multi={false}
+                  simpleValue
+                  options={selectOptions}
+                  onChange={this.handleOnChange.bind(this)}
+                  value={selectValue}
+                />
+              ) :
+              (
+                <div>TODO</div>
+              )
+          }
+        </div>
+        <div className="ValueEditorButtons">
+          <button
+            className="ValueEditorSaveButton"
+            disabled={!changed}
+            onClick={() => { this.handleSaveButtonPress(); }}>
+              Save
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+}
+
+class ListValueEditorComponent extends ValueEditorComponent
+{
+  constructor(props) {
+    super(props);
+    this.state = 
+      {
+        newValue : this.props.initialValue ? this.props.initialValue : [],
+        changed : false
+      };
+  }
+
+  handleOnChange(newValue) {
+    console.log("newValue = ", newValue);
+    this.setState( { newValue : newValue.map(v => v.value), changed : true } );
+  }
+
+  handleSaveButtonPress() {
+    const { newValue, changed } = this.state;
+    const { onSaveValue } = this.props;
+    if (changed) {
+      onSaveValue(newValue);
+    }
+  }
+
+  render() {
+    const { domain, initialValue } = this.props;
+    const { newValue, changed } = this.state;
+    const selectValue = changed  ? newValue : initialValue;
+
+    const selectOptions = domain ?
+      domain.map(e => { return {value : e, label : e }; }) :
+      (selectValue ? selectValue.map(e => { return { value : e, label : e }; }) : []);
+
+    return (
+      <div className="ValueEditorComponent">
+        <div className="ListValueEditorValue">
+          {
+            domain !== null ? 
+              (
+                <Select
+                  name="ListValueEditor"
+                  multi={true}
+                  options={selectOptions}
+                  onChange={this.handleOnChange.bind(this)}
+                  value={selectValue}
+                />
+              ) :
+              (
+                <Select.Creatable
+                  name="ListValueEditor"
+                  multi={true}
+                  options={selectOptions}
+                  onChange={this.handleOnChange.bind(this)}
+                  value={selectValue}
+                />
+              )
+          }
+        </div>
+        <div className="ValueEditorButtons">
+          <button
+            className="ValueEditorSaveButton"
+            disabled={!changed}
+            onClick={() => { this.handleSaveButtonPress(); }}>
+              Save
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
 
 class CheckboxComponent extends Component {
   render() {
@@ -24,7 +176,7 @@ class CheckboxComponent extends Component {
 CheckboxComponent.propTypes = {
   optionName : PropTypes.string.isRequired,
   attrName : PropTypes.string.isRequired,
-  checked : PropTypes.bool.isRequired,
+  checked : PropTypes.bool.isRequired
 };
 
 class ListComponent extends Component {
@@ -72,6 +224,8 @@ class OptionComponentBase extends Component {
 OptionComponentBase.propTypes = {
   dispatch : PropTypes.func.isRequired,
   doFetchOption : PropTypes.func.isRequired,
+  doPutSetListOptionValue : PropTypes.func.isRequired,
+  doPutSetSingleOptionValue : PropTypes.func.isRequired,
   Option : PropTypes.object,
   processName : PropTypes.string.isRequired,
   configName : PropTypes.string.isRequired,
@@ -85,7 +239,7 @@ function mapStateToProps (state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchOption }, dispatch);
+  let actions = bindActionCreators({ doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue }, dispatch);
   return { ...actions, dispatch };
 }
 
@@ -188,12 +342,28 @@ class OptionViewComponent extends OptionComponentBase {
             </td>
             <td className="UIFormValue">
               {
-                Option.value !== undefined ?
+                Option.isSystem ?
                   (
-                    Option.isList ? 
-                      <ListComponent optionName={Option.optionName} attrName={"value"} values={Option.value} /> :
-                      Option.value
-                  ) : (null)
+                    Option.value !== undefined ?
+                      (
+                        Option.isList ? 
+                          <ListComponent optionName={Option.optionName} attrName={"value"} values={Option.value} /> :
+                          Option.value
+                      ) : <div/>
+                  ) :
+                  (
+                    Option.isList ?
+                      <ListValueEditorComponent
+                        optionName={Option.optionName}
+                        initialValue={Option.value !== undefined ? Option.value : null}
+                        domain={Option.valueType === "domain" ? Option.domain : null}
+                        onSaveValue={newValue => this.onListValueOptionChanged(newValue)} /> :
+                      <SingleValueEditorComponent
+                        optionName={Option.optionName}
+                        initialValue={Option.value !== undefined ? Option.value : null}
+                        domain={Option.valueType === "domain" ? Option.domain : null}
+                        onSaveValue={newValue => this.onSingleValueOptionChanged(newValue)} />
+                  )
               }
             </td>
           </tr>
@@ -201,6 +371,27 @@ class OptionViewComponent extends OptionComponentBase {
         </tbody>
       </table>
     );
+  }
+
+  onSingleValueOptionChanged(newValue) {
+    const { dispatch, processName, configName, optionName } = this.props;
+
+    if (newValue !== null && newValue.length > 0) {
+      dispatch(this.props.doPutSetSingleOptionValue(processName, configName, optionName, newValue));
+    } else {
+
+    }
+  }
+
+  onListValueOptionChanged(newValue) {
+    const { dispatch, processName, configName, optionName } = this.props;
+
+    if (newValue !== null && newValue.length > 0) {
+      dispatch(this.props.doPutSetListOptionValue(processName, configName, optionName, newValue));
+    } else {
+
+    }
+
   }
 }
 

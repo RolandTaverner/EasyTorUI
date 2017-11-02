@@ -93,3 +93,26 @@
   padding : 0;
   line-height: 1.5em;
 }
+
+.ValueEditorComponent {
+  margin: auto;
+  display: inline-flex;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.ListValueEditorValue {
+  width: 90%;
+}
+
+.ValueEditorButtons {
+  margin: auto;
+  width: auto;
+}
+
+.ValueEditorSaveButton {
+  margin-right: 5px;
+  margin-left: 5px;  
+  float: left;
+  height: 25px;
+}

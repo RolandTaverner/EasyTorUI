@@ -62,3 +62,92 @@ export function doFetchOption(processName, configName, optionName) {
     return fetchOption(processName, configName, optionName);
   };
 }
+
+
+export const SET_OPTION_VALUE = "SET_OPTION_VALUE";
+export function setSingleOptionValue(processName, configName, optionName, value) {
+  return {
+    type : SET_OPTION_VALUE,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    value : value
+  };
+}
+export function setListOptionValue(processName, configName, optionName, arrayValue) {
+  return {
+    type : SET_OPTION_VALUE,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    arrayValue : arrayValue
+  };
+}
+
+export function putSetSingleOptionValue(processName, configName, optionName, value) {
+  return dispatch => {
+    dispatch(setSingleOptionValue(processName, configName, optionName, value));
+
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + processName + "/configs/" + configName + "/options/" + optionName,
+      {
+        method: "PUT",
+        mode: "cors",
+        redirect: "follow",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify( {value : value} )
+      })
+      .then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+          .then(jsonResponse => {
+            dispatch(receiveOption(processName, configName, optionName, jsonResponse.json, jsonResponse.status));
+          });
+      })
+      .catch(err => {
+        dispatch(receiveOptionError(processName, configName, optionName, createGenericError(err)));
+      });
+  };
+}
+
+export function putSetListOptionValue(processName, configName, optionName, arrayValue) {
+  return dispatch => {
+    dispatch(setListOptionValue(processName, configName, optionName, arrayValue));
+
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + processName + "/configs/" + configName + "/options/" + optionName,
+      {
+        method: "PUT",
+        mode: "cors",
+        redirect: "follow",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify( {array_value : arrayValue} )
+      })
+      .then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+          .then(jsonResponse => {
+            dispatch(receiveOption(processName, configName, optionName, jsonResponse.json, jsonResponse.status));
+          });
+      })
+      .catch(err => {
+        dispatch(receiveOptionError(processName, configName, optionName, createGenericError(err)));
+      });
+  };
+}
+
+export function doPutSetSingleOptionValue(processName, configName, optionName, value) {
+  return (dispatch, getState) => {
+    return putSetSingleOptionValue(processName, configName, optionName, value);
+  };
+}
+
+export function doPutSetListOptionValue(processName, configName, optionName, arrayValue) {
+  return (dispatch, getState) => {
+    return putSetListOptionValue(processName, configName, optionName, arrayValue);
+  };
+}

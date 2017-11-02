@@ -128,7 +128,7 @@ class ProcessStateComponent extends ProcessComponentBase {
     }
     else if (Process.error !== null)
     {
-     return (<Error error={Process.error} />); 
+      return (<Error error={Process.error} />); 
     }
     return (<div style={styles[Process.processState]}>{Process.processState.toUpperCase()}</div>);
   }
