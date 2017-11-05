@@ -2,7 +2,7 @@ import fetch from "isomorphic-fetch";
 import { createGenericError } from "./Helpers";
 
 /*******************************************************************************
-  Options
+  Get option
 *******************************************************************************/
 export const REQUEST_OPTION = "REQUEST_OPTION";
 export function requestOption(processName, configName, optionName) {
@@ -41,18 +41,6 @@ export function receiveOptionError(processName, configName, optionName, error) {
   };
 }
 
-export const MODIFY_OPTION_ERROR = "MODIFY_OPTION_ERROR";
-export function modifyOptionError(processName, configName, optionName, error) {
-  return {
-    type : MODIFY_OPTION_ERROR,
-    processName : processName,
-    configName : configName,
-    optionName : optionName,
-    modifyError : error,
-    receivedAt : Date.now()
-  };
-}
-
 export function fetchOption(processName, configName, optionName) {
   return dispatch => {
     dispatch(requestOption(processName, configName, optionName));
@@ -75,6 +63,9 @@ export function doFetchOption(processName, configName, optionName) {
   };
 }
 
+/*******************************************************************************
+  Set option
+*******************************************************************************/
 
 export const SET_OPTION_VALUE = "SET_OPTION_VALUE";
 export function setSingleOptionValue(processName, configName, optionName, value) {
@@ -86,6 +77,7 @@ export function setSingleOptionValue(processName, configName, optionName, value)
     value : value
   };
 }
+
 export function setListOptionValue(processName, configName, optionName, arrayValue) {
   return {
     type : SET_OPTION_VALUE,
@@ -93,6 +85,18 @@ export function setListOptionValue(processName, configName, optionName, arrayVal
     configName : configName,
     optionName : optionName,
     arrayValue : arrayValue
+  };
+}
+
+export const MODIFY_OPTION_ERROR = "MODIFY_OPTION_ERROR";
+export function modifyOptionError(processName, configName, optionName, error) {
+  return {
+    type : MODIFY_OPTION_ERROR,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    modifyError : error,
+    receivedAt : Date.now()
   };
 }
 
@@ -161,5 +165,51 @@ export function doPutSetSingleOptionValue(processName, configName, optionName, v
 export function doPutSetListOptionValue(processName, configName, optionName, arrayValue) {
   return (dispatch, getState) => {
     return putSetListOptionValue(processName, configName, optionName, arrayValue);
+  };
+}
+
+/*******************************************************************************
+  Delete option
+*******************************************************************************/
+
+export const DELETE_OPTION_VALUE = "DELETE_OPTION_VALUE";
+export function deleteOptionValue(processName, configName, optionName) {
+  return {
+    type : DELETE_OPTION_VALUE,
+    processName : processName,
+    configName : configName,
+    optionName : optionName
+  };
+}
+
+export function fetchDeleteOptionValue(processName, configName, optionName) {
+  return dispatch => {
+    dispatch(deleteOptionValue(processName, configName, optionName));
+
+    return fetch("http://127.0.0.1:30000/api/controller/processes/" + processName + "/configs/" + configName + "/options/" + optionName,
+      {
+        method: "DELETE",
+        mode: "cors",
+        redirect: "follow",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json"
+        }
+      })
+      .then(response => { 
+        response.json().then( data => { return {json: data, status: response.status};} )
+          .then(jsonResponse => {
+            dispatch(receiveOption(processName, configName, optionName, jsonResponse.json, jsonResponse.status));
+          });
+      })
+      .catch(err => {
+        dispatch(modifyOptionError(processName, configName, optionName, createGenericError(err)));
+      });
+  };
+}
+
+export function dofetchDeleteOptionValue(processName, configName, optionName) {
+  return (dispatch, getState) => {
+    return fetchDeleteOptionValue(processName, configName, optionName);
   };
 }

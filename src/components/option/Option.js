@@ -8,18 +8,24 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 
 import "./Option.css";
-import { doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue } from "../../actions/Option";
+import { doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue, dofetchDeleteOptionValue } from "../../actions/Option";
 
 class ValueEditorComponent extends Component {
 
   onSaveValue(newValue) {
     this.props.onSaveValue(newValue);
   }
+
+  onDeleteValue() {
+    this.props.onDeleteValue(); 
+  }
 }
 
 ValueEditorComponent.propTypes = {
   optionName : PropTypes.string.isRequired,
   onSaveValue : PropTypes.func.isRequired,
+  onDeleteValue : PropTypes.func.isRequired,
+  isRemovable : PropTypes.bool.isRequired,
   domain : PropTypes.array
 };
 
@@ -40,14 +46,14 @@ class SingleValueEditorComponent extends ValueEditorComponent
 
   handleSaveButtonPress() {
     const { newValue, changed } = this.state;
-    const { onSaveValue } = this.props;
+    // const { onSaveValue } = this.props;
     if (changed) {
-      onSaveValue(newValue);
+      this.onSaveValue(newValue);
     }
   }
 
   render() {
-    const { domain, initialValue } = this.props;
+    const { domain, initialValue, isRemovable } = this.props;
     const { newValue, changed } = this.state;
     const selectValue = changed  ? newValue : initialValue;
 
@@ -75,17 +81,28 @@ class SingleValueEditorComponent extends ValueEditorComponent
         </div>
         <div className="ValueEditorButtons">
           <button
-            className="ValueEditorSaveButton"
+            className="ValueEditorButton"
             disabled={!changed}
             onClick={() => { this.handleSaveButtonPress(); }}>
               Save
           </button>
+          { isRemovable ?
+            <button
+              className="ValueEditorButton"
+              disabled={!isRemovable}
+              onClick={() => { this.onDeleteValue(); }}>
+                Delete
+            </button> : <div/>}
         </div>
       </div>
     );
   }
 
 }
+
+SingleValueEditorComponent.propTypes = {
+  initialValue : PropTypes.string
+};
 
 class ListValueEditorComponent extends ValueEditorComponent
 {
@@ -104,14 +121,14 @@ class ListValueEditorComponent extends ValueEditorComponent
 
   handleSaveButtonPress() {
     const { newValue, changed } = this.state;
-    const { onSaveValue } = this.props;
+    //const { onSaveValue } = this.props;
     if (changed) {
-      onSaveValue(newValue);
+      this.onSaveValue(newValue);
     }
   }
 
   render() {
-    const { domain, initialValue } = this.props;
+    const { domain, initialValue, isRemovable } = this.props;
     const { newValue, changed } = this.state;
     const selectValue = changed  ? newValue : initialValue;
 
@@ -146,16 +163,27 @@ class ListValueEditorComponent extends ValueEditorComponent
         </div>
         <div className="ValueEditorButtons">
           <button
-            className="ValueEditorSaveButton"
+            className="ValueEditorButton"
             disabled={!changed}
             onClick={() => { this.handleSaveButtonPress(); }}>
               Save
           </button>
+          { isRemovable ?
+            <button
+              className="ValueEditorButton"
+              disabled={!isRemovable}
+              onClick={() => { this.onDeleteValue(); }}>
+                Delete
+            </button> : <div/>}
         </div>
       </div>
     );
   }
 }
+
+ListValueEditorComponent.propTypes = {
+  initialValue : PropTypes.array
+};
 
 class CheckboxComponent extends Component {
   render() {
@@ -224,6 +252,7 @@ OptionComponentBase.propTypes = {
   doFetchOption : PropTypes.func.isRequired,
   doPutSetListOptionValue : PropTypes.func.isRequired,
   doPutSetSingleOptionValue : PropTypes.func.isRequired,
+  dofetchDeleteOptionValue : PropTypes.func.isRequired,
   Option : PropTypes.object,
   processName : PropTypes.string.isRequired,
   configName : PropTypes.string.isRequired,
@@ -237,7 +266,7 @@ function mapStateToProps (state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators({ doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue }, dispatch);
+  let actions = bindActionCreators({ doFetchOption, doPutSetListOptionValue, doPutSetSingleOptionValue, dofetchDeleteOptionValue }, dispatch);
   return { ...actions, dispatch };
 }
 
@@ -355,12 +384,16 @@ class OptionViewComponent extends OptionComponentBase {
                         optionName={Option.optionName}
                         initialValue={Option.value !== undefined ? Option.value : null}
                         domain={Option.valueType === "domain" ? Option.domain : null}
-                        onSaveValue={newValue => this.onListValueOptionChanged(newValue)} /> :
+                        isRemovable={!Option.isRequired}
+                        onSaveValue={newValue => this.onListValueOptionChanged(newValue)} 
+                        onDeleteValue={() => this.onDeleteValue()} /> :
                       <SingleValueEditorComponent
                         optionName={Option.optionName}
                         initialValue={Option.value !== undefined ? Option.value : null}
                         domain={Option.valueType === "domain" ? Option.domain : null}
-                        onSaveValue={newValue => this.onSingleValueOptionChanged(newValue)} />
+                        isRemovable={!Option.isRequired}
+                        onSaveValue={newValue => this.onSingleValueOptionChanged(newValue)} 
+                        onDeleteValue={() => this.onDeleteValue()} />
                   )
               }
             </td>
@@ -374,22 +407,27 @@ class OptionViewComponent extends OptionComponentBase {
   onSingleValueOptionChanged(newValue) {
     const { dispatch, processName, configName, optionName } = this.props;
 
-    if (newValue !== null && newValue.length > 0) {
+    if (newValue !== null) {
       dispatch(this.props.doPutSetSingleOptionValue(processName, configName, optionName, newValue));
     } else {
-
+      this.onDeleteValue();
     }
   }
 
   onListValueOptionChanged(newValue) {
     const { dispatch, processName, configName, optionName } = this.props;
 
-    if (newValue !== null && newValue.length > 0) {
+    if (newValue !== null) {
       dispatch(this.props.doPutSetListOptionValue(processName, configName, optionName, newValue));
     } else {
-
+      this.onDeleteValue();
     }
 
+  }
+
+  onDeleteValue() {
+    const { dispatch, processName, configName, optionName } = this.props;
+    dispatch(this.props.dofetchDeleteOptionValue(processName, configName, optionName));
   }
 }
 

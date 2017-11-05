@@ -102,7 +102,7 @@
 }
 
 .SingleValueEditorValue {
-  width: 90%;
+  width: 80%;
 }
 
 .SingleValueEditorInput {
@@ -130,15 +130,16 @@
 }
 
 .ListValueEditorValue {
-  width: 90%;
+  width: 80%;
 }
 
 .ValueEditorButtons {
   margin: auto;
   width: auto;
+  display: table;
 }
 
-.ValueEditorSaveButton {
+.ValueEditorButton {
   margin-right: 5px;
   margin-left: 5px;  
   float: left;

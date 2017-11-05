@@ -5,6 +5,7 @@ import {
   RECEIVE_OPTION,
   RECEIVE_OPTION_ERROR,
   SET_OPTION_VALUE,
+  DELETE_OPTION_VALUE,
   MODIFY_OPTION_ERROR
 } from "../actions/Option";
 
@@ -73,6 +74,7 @@ const Options = (state = [], action) => {
       });
     return [ ...state.filter(notThisOption), newItem ];
   case SET_OPTION_VALUE:
+  case DELETE_OPTION_VALUE:
     newItem = Object.assign({}, existingItem,
       {
         isFetching : true,
