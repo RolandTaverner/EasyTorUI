@@ -1,3 +1,46 @@
 .Controller {
   width: 1000px;
 }
+
+.ImportantOptionsTable {
+  margin: 10px;
+  border-radius: 4px;
+  border: 1px solid #AAA;
+  border-collapse: collapse;
+  table-layout: auto;
+  background-color: white;
+}
+
+.ImportantOptionsTableRow {
+}
+
+.ImportantOptionsTableLabel {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #AAA;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-weight: bold;
+}
+
+.ImportantOptionsTableValue {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #AAA;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.ImportantOptionsTableState {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: 1px solid #AAA;
+  margin: auto;
+  overflow: visible;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 12px;
+  padding-top: 2px;
+}

@@ -289,6 +289,28 @@ class OptionPresentationComponent extends OptionComponentBase {
   }
 }
 
+class OptionValueComponent extends OptionComponentBase {
+
+  render() {
+    const { Option } = this.props;
+
+    if (Option === undefined || Option.isFetching === true)
+    {
+      return (<div>Loading...</div>);
+    }
+    if (Option.value === undefined || Option.value === null)
+    {
+      return <div/>;
+    }
+
+    if (Option.isList) {
+      return Option.value.map((i, index) => <div className="OptionValueItem" key={index}>{i}</div>);
+    }
+    
+    return <div className="OptionValueItem">{Option.value}</div>;
+  }
+}
+
 class OptionViewComponent extends OptionComponentBase {
 
   render() {
@@ -432,4 +454,5 @@ class OptionViewComponent extends OptionComponentBase {
 }
 
 export const OptionPresentation = connect(mapStateToProps, mapDispatchToProps)(OptionPresentationComponent);
+export const OptionValue = connect(mapStateToProps, mapDispatchToProps)(OptionValueComponent);
 export const OptionView = connect(mapStateToProps, mapDispatchToProps)(OptionViewComponent);

@@ -8,6 +8,8 @@ import { doFetchControllerInfo } from "../../actions/ControllerInfo";
 import PresetList from "../preset_list/PresetList";
 import ProcessList from "../process_list/ProcessList";
 import Section from "../section/Section";
+import { OptionValue } from "../option/Option";
+import { ProcessState } from "../process/Process";
 
 class TorController extends Component {
   render() {
@@ -28,6 +30,20 @@ class TorController extends Component {
           <p className="App-intro">
             PID = { ControllerInfo.pid === null ? "Loading..." : ControllerInfo.pid }
           </p>
+          <table className="ImportantOptionsTable" cellSpacing="5">
+            <tbody>
+              <tr className="ImportantOptionsTableRow">
+                <td className="ImportantOptionsTableLabel">Tor port</td>
+                <td className="ImportantOptionsTableValue"><OptionValue processName="tor" configName="config" optionName="SOCKSPort"/> </td>
+                <td className="ImportantOptionsTableState"><ProcessState processName="tor"/></td>
+              </tr>
+              <tr className="ImportantOptionsTableRow">
+                <td className="ImportantOptionsTableLabel">Privoxy port</td>
+                <td className="ImportantOptionsTableValue"><OptionValue processName="privoxy" configName="config" optionName="listen-address"/> </td>
+                <td className="ImportantOptionsTableState"><ProcessState processName="privoxy"/></td>
+              </tr>
+            </tbody>
+          </table>          
         </Section>
 
         <Section headerText="PRESETS" bgColor="#F0FFF0">
