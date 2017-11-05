@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import _ from "lodash";
-import "react-table/react-table.css";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "./Process.css";
 import { doFetchProcess, doFetchPostProcessAction } from "../../actions/Process";
@@ -61,7 +60,7 @@ class ProcessViewComponent extends ProcessComponentBase {
         { Process.configs !== null ?
           <Tabs style={{height: "100%", display : "block", overflow: "auto"}}>
             <TabList>
-              { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}>{confName} options</Tab>)) }
+              { Process.configs.map( confName =>  ( <Tab key={"Tab" + confName}><b>{confName}</b> options</Tab>)) }
               <Tab key={"TabLog"}>Log</Tab>
             </TabList>
             <div className="ConfigTabPanel">

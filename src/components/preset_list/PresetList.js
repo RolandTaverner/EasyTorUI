@@ -7,7 +7,7 @@ import _ from "lodash";
 import "react-table/react-table.css";
 import "./PresetList.css";
 import { doFetchPresetList } from "../../actions/Presets";
-import PresetGroup from "../preset_group/PresetGroup";
+import { PresetGroup } from "../preset_group/PresetGroup";
 import Section from "../section/Section";
 
 

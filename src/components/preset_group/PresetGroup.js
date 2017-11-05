@@ -3,16 +3,84 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
 import ReactTable from "react-table";
-import _ from "lodash";
 import "react-table/react-table.css";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+
+import _ from "lodash";
 import "./PresetGroup.css";
 import { doFetchPresetGroup } from "../../actions/Presets";
 import Section from "../section/Section";
 
+class ProcessPresetsComponent extends Component {
+  render() {
+    const { configs } = this.props;
+
+    const columns = [
+      {
+        Header: "Option",
+        id : "option_name",
+        accessor: d => d.name,
+        width: 150,
+        headerStyle: { "fontWeight": "bold"}
+      },
+      {
+        Header: "Value",
+        id : "value",
+        headerStyle: { "fontWeight": "bold"},
+        Cell : row => {
+          if (row.original.array_value !== undefined)
+          {
+            return row.original.array_value.map((i, index) => <p className="PresetItem" key={index}>{i}</p>);
+          }
+          return <p className="PresetItem">{row.original.value}</p>;
+        }
+      }
+    ];
+
+    return (
+      <div className="PresetsConfigTabs">
+        { configs !== undefined ?
+          <Tabs style={{height: "100%", display : "block", overflow: "auto"}}>
+            <TabList>
+              { configs.map( c => ( <Tab key={"Tab" + c.config_name}><b>{c.config_name}</b> presets</Tab>)) }
+            </TabList>
+            <div className="PresetsConfigTabPanel">
+              { configs.map( c => ( 
+                <TabPanel key={"TabPanel" + c.config_name}>  
+                  <ReactTable
+                    data={c.options}
+                    columns={columns}
+                    showPagination={c.options.length > 10}
+                    pageSize={Math.min(c.options.length, 10)}
+                    className="-striped -highlight"
+                  />
+
+                </TabPanel>)) }
+            </div>
+          </Tabs> : "" }
+      </div>);
+  }
+}
+
+ProcessPresetsComponent.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  groupName : PropTypes.string.isRequired,
+  processName : PropTypes.string.isRequired,
+  configs : PropTypes.array
+};
+
+function mapStateToProcessPresetsProps (state, ownProps) {
+  return {
+    configs : _.find(_.find(state.Presets, pg => { return pg.groupName === ownProps.groupName; }).processConfigs, pc => { return pc.process_id === ownProps.processName; }).configs
+  };
+}
+
+export const ProcessPresets = connect(mapStateToProcessPresetsProps)(ProcessPresetsComponent);
 
 class PresetGroupComponent extends Component {
   render() {
-    const { PresetGroup } = this.props;
+    const { PresetGroup, groupName } = this.props;
 
     if (PresetGroup === undefined)
     {
@@ -48,8 +116,8 @@ class PresetGroupComponent extends Component {
               row => {
                 return (
                   <div className="PresetSectionContainer">
-                    <Section headerText="PRESET OPTIONS" bgColor="#FAFAFF">
-                      
+                    <Section headerText="OPTIONS" bgColor="#FAFAFF">
+                      <ProcessPresets groupName={groupName} processName={row.original.name} />
                     </Section>
                   </div>
                 );
@@ -100,4 +168,4 @@ function mapDispatchToProps(dispatch) {
   return { ...actions, dispatch };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PresetGroupComponent);
+export const PresetGroup = connect(mapStateToProps, mapDispatchToProps)(PresetGroupComponent);

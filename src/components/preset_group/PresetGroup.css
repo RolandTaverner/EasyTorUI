@@ -3,6 +3,22 @@
     background-color: white;
 }
 
-.ProcessSectionContainer {
+.PresetSectionContainer {
 
+}
+
+.PresetsConfigTabs {
+  margin: auto;
+  display: block;
+  overflow: auto;
+}
+
+.PresetsConfigTabPanel {
+  margin: 1px;
+}
+
+.PresetItem {
+  margin: 0;
+  padding : 0;
+  line-height: 1.5em;
 }
