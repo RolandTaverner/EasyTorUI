@@ -3,7 +3,9 @@ import _ from "lodash";
 import {
   REQUEST_OPTION,
   RECEIVE_OPTION,
-  RECEIVE_OPTION_ERROR
+  RECEIVE_OPTION_ERROR,
+  SET_OPTION_VALUE,
+  MODIFY_OPTION_ERROR
 } from "../actions/Option";
 
 
@@ -24,6 +26,7 @@ const Options = (state = [], action) => {
       {
         isFetching : true,
         error : null,
+        modifyError : null,
         processName : action.processName,
         configName : action.configName,
         optionName : action.optionName,
@@ -36,6 +39,7 @@ const Options = (state = [], action) => {
       {
         isFetching : false,
         error : action.status === 200 ? null : { apiError : action.response, httpStatus : action.status, generic : null },
+        modifyError : null,
         processName : action.processName,
         configName : action.configName,
         optionName : action.optionName,
@@ -54,6 +58,7 @@ const Options = (state = [], action) => {
       {
         isFetching : false,
         error : action.error,
+        modifyError : null,
         processName : action.processName,
         configName : action.configName,
         optionName : action.optionName,
@@ -65,6 +70,22 @@ const Options = (state = [], action) => {
         domain : null,
         value : null,
         defaultValue : null
+      });
+    return [ ...state.filter(notThisOption), newItem ];
+  case SET_OPTION_VALUE:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : true,
+        error : null,
+        modifyError : null
+      });
+    return [ ...state.filter(notThisOption), newItem ];
+  case MODIFY_OPTION_ERROR:
+    newItem = Object.assign({}, existingItem,
+      {
+        isFetching : false,
+        error : null,
+        modifyError : action.modifyError
       });
     return [ ...state.filter(notThisOption), newItem ];
   default:

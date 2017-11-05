@@ -41,6 +41,18 @@ export function receiveOptionError(processName, configName, optionName, error) {
   };
 }
 
+export const MODIFY_OPTION_ERROR = "MODIFY_OPTION_ERROR";
+export function modifyOptionError(processName, configName, optionName, error) {
+  return {
+    type : MODIFY_OPTION_ERROR,
+    processName : processName,
+    configName : configName,
+    optionName : optionName,
+    modifyError : error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchOption(processName, configName, optionName) {
   return dispatch => {
     dispatch(requestOption(processName, configName, optionName));
@@ -107,7 +119,7 @@ export function putSetSingleOptionValue(processName, configName, optionName, val
           });
       })
       .catch(err => {
-        dispatch(receiveOptionError(processName, configName, optionName, createGenericError(err)));
+        dispatch(modifyOptionError(processName, configName, optionName, createGenericError(err)));
       });
   };
 }
@@ -135,7 +147,7 @@ export function putSetListOptionValue(processName, configName, optionName, array
           });
       })
       .catch(err => {
-        dispatch(receiveOptionError(processName, configName, optionName, createGenericError(err)));
+        dispatch(modifyOptionError(processName, configName, optionName, createGenericError(err)));
       });
   };
 }

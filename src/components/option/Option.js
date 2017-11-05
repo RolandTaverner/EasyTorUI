@@ -35,7 +35,6 @@ class SingleValueEditorComponent extends ValueEditorComponent
   }
 
   handleOnChange (newValue) {
-    console.log("newValue = ", newValue);
     this.setState( { newValue : newValue, changed : true } );
   }
 
@@ -56,7 +55,7 @@ class SingleValueEditorComponent extends ValueEditorComponent
 
     return (
       <div className="ValueEditorComponent">
-        <div className="ListValueEditorValue">
+        <div className="SingleValueEditorValue">
           {
             domain !== null ? 
               (
@@ -70,7 +69,7 @@ class SingleValueEditorComponent extends ValueEditorComponent
                 />
               ) :
               (
-                <div>TODO</div>
+                <input className="SingleValueEditorInput" type="text" value={selectValue} onChange={ e => this.handleOnChange.bind(this)(e.target.value ) } />
               )
           }
         </div>
@@ -100,7 +99,6 @@ class ListValueEditorComponent extends ValueEditorComponent
   }
 
   handleOnChange(newValue) {
-    console.log("newValue = ", newValue);
     this.setState( { newValue : newValue.map(v => v.value), changed : true } );
   }
 
