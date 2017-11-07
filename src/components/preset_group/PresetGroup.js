@@ -9,7 +9,7 @@ import "react-tabs/style/react-tabs.css";
 
 import _ from "lodash";
 import "./PresetGroup.css";
-import { doFetchPresetGroup } from "../../actions/Presets";
+import { doFetchPresetGroup, doFetchApplyPresetGroup } from "../../actions/Presets";
 import Section from "../section/Section";
 
 class ProcessPresetsComponent extends Component {
@@ -78,7 +78,48 @@ function mapStateToProcessPresetsProps (state, ownProps) {
 
 export const ProcessPresets = connect(mapStateToProcessPresetsProps)(ProcessPresetsComponent);
 
-class PresetGroupComponent extends Component {
+class PresetGroupComponentBase extends Component {
+  componentWillMount() {
+    const { dispatch, groupName, PresetGroup } = this.props;
+    const { isFetching, processConfigs } = (PresetGroup !== undefined ? PresetGroup : { isFetching : false, processConfigs : null });
+
+    if (PresetGroup === undefined || (processConfigs === null && !isFetching))
+    {
+      dispatch(this.props.doFetchPresetGroup(groupName));
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    
+    const currentProcessConfigs = this.props.PresetGroup !== undefined ? 
+      (this.props.PresetGroup.processConfigs !== null ? this.props.PresetGroup.processConfigs.map(pc => pc.process_id) : []) : [];
+    const nextProcessConfigs = nextProps.PresetGroup !== undefined ?
+      (nextProps.PresetGroup.processConfigs !== null ? nextProps.PresetGroup.processConfigs.map(pc => pc.process_id) : []) : [];
+    return !_.isEqual(currentProcessConfigs.sort(), nextProcessConfigs.sort());
+  }
+  
+}
+
+PresetGroupComponentBase.propTypes = {
+  dispatch : PropTypes.func.isRequired,
+  doFetchPresetGroup : PropTypes.func.isRequired,
+  doFetchApplyPresetGroup : PropTypes.func.isRequired,
+  groupName : PropTypes.string.isRequired,
+  PresetGroup : PropTypes.object
+};
+
+function mapStateToProps (state, ownProps) {
+  return {
+    PresetGroup : _.find(state.Presets, pg => { return pg.groupName === ownProps.groupName; })
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  let actions = bindActionCreators( { doFetchPresetGroup, doFetchApplyPresetGroup }, dispatch);
+  return { ...actions, dispatch };
+}
+
+class PresetGroupComponent extends PresetGroupComponentBase {
   render() {
     const { PresetGroup, groupName } = this.props;
 
@@ -104,68 +145,42 @@ class PresetGroupComponent extends Component {
     ];
     
     return (
-      <div>
-        <div className="PresetsTable">
-          <ReactTable
-            data={data}
-            columns={columns}
-            showPagination={false}
-            pageSize={ data.length  }
-            className="-striped -highlight"
-            SubComponent={
-              row => {
-                return (
-                  <div className="PresetSectionContainer">
-                    <Section headerText="OPTIONS" bgColor="#FAFAFF">
-                      <ProcessPresets groupName={groupName} processName={row.original.name} />
-                    </Section>
-                  </div>
-                );
-              }
+      <div className="PresetsTable">
+        <ReactTable
+          data={data}
+          columns={columns}
+          showPagination={false}
+          pageSize={ data.length  }
+          className="-striped -highlight"
+          SubComponent={
+            row => {
+              return (
+                <div className="PresetSectionContainer">
+                  <Section headerText="OPTIONS" bgColor="#FAFAFF">
+                    <ProcessPresets groupName={groupName} processName={row.original.name} />
+                  </Section>
+                </div>
+              );
             }
-          />
-        </div>
+          }
+        />
       </div>
     );
   }
-
-  componentWillMount() {
-    const { dispatch, groupName, PresetGroup } = this.props;
-    const { isFetching, processConfigs } = (PresetGroup !== undefined ? PresetGroup : { isFetching : false, processConfigs : null });
-
-    if (PresetGroup === undefined || (processConfigs === null && !isFetching))
-    {
-      dispatch(this.props.doFetchPresetGroup(groupName));
-    }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    
-    const currentProcessConfigs = this.props.PresetGroup !== undefined ? 
-      (this.props.PresetGroup.processConfigs !== null ? this.props.PresetGroup.processConfigs.map(pc => pc.process_id) : []) : [];
-    const nextProcessConfigs = nextProps.PresetGroup !== undefined ?
-      (nextProps.PresetGroup.processConfigs !== null ? nextProps.PresetGroup.processConfigs.map(pc => pc.process_id) : []) : [];
-    return !_.isEqual(currentProcessConfigs.sort(), nextProcessConfigs.sort());
-  }
-  
-}
-
-PresetGroupComponent.propTypes = {
-  dispatch : PropTypes.func.isRequired,
-  doFetchPresetGroup : PropTypes.func.isRequired,
-  groupName : PropTypes.string.isRequired,
-  PresetGroup : PropTypes.object
-};
-
-function mapStateToProps (state, ownProps) {
-  return {
-    PresetGroup : _.find(state.Presets, pg => { return pg.groupName === ownProps.groupName; })
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  let actions = bindActionCreators( { doFetchPresetGroup }, dispatch);
-  return { ...actions, dispatch };
 }
 
 export const PresetGroup = connect(mapStateToProps, mapDispatchToProps)(PresetGroupComponent);
+
+class PresetGroupActionsComponent extends PresetGroupComponentBase {
+  render() {
+    const { dispatch, groupName, doFetchApplyPresetGroup } = this.props;
+    return (
+      <button
+        className="ApplyPresetsButton"
+        onClick={() => { dispatch(doFetchApplyPresetGroup(groupName)); }}>
+          Apply
+      </button>);
+  }
+}
+
+export const PresetGroupActions = connect(mapStateToProps, mapDispatchToProps)(PresetGroupActionsComponent);

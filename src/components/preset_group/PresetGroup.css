@@ -22,3 +22,10 @@
   padding : 0;
   line-height: 1.5em;
 }
+
+.ApplyPresetsButton {
+  margin-right: 5px;
+  margin-left: 5px;  
+  float: left;
+  height: 25px;
+}

@@ -7,7 +7,7 @@ import _ from "lodash";
 import "react-table/react-table.css";
 import "./PresetList.css";
 import { doFetchPresetList } from "../../actions/Presets";
-import { PresetGroup } from "../preset_group/PresetGroup";
+import { PresetGroup, PresetGroupActions } from "../preset_group/PresetGroup";
 import Section from "../section/Section";
 
 
@@ -33,8 +33,7 @@ class PresetListComponent extends Component {
         id : "actions",
         headerStyle: { "fontWeight": "bold"},
         Cell : row => (
-          <div>TODO</div>
-          /*<PresetActions groupName={row.original.name} />*/
+          <PresetGroupActions groupName={row.original.name} />
         )
       }
     ];

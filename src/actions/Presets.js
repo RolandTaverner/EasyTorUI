@@ -1,4 +1,8 @@
 import fetch from "isomorphic-fetch";
+import { createGenericError } from "./Helpers";
+import store from "../Store";
+
+import { fetchOption } from "./Option";
 
 /*******************************************************************************
   PresetList
@@ -20,6 +24,17 @@ export function receivePresetList(json, status) {
   };
 }
 
+export const RECEIVE_PRESETLIST_ERROR = "RECEIVE_PRESETLIST_ERROR";
+export function receivePresetListError(error) {
+  return {
+    type : RECEIVE_PRESETLIST_ERROR,
+    response : null,
+    status : null,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
+
 export function fetchPresetList() {
   return dispatch => {
     dispatch(requestPresetList());
@@ -31,7 +46,7 @@ export function fetchPresetList() {
           });
       })
       .catch(err => {
-        
+        dispatch(receivePresetListError(createGenericError(err)));
       });
   };
 }
@@ -83,5 +98,79 @@ export function fetchPresetGroup(groupName) {
 export function doFetchPresetGroup(groupName) {
   return (dispatch, getState) => {
     return fetchPresetGroup(groupName);
+  };
+}
+
+/*******************************************************************************
+  Apply PresetGroup
+*******************************************************************************/
+export const APPLY_PRESETGROUP = "APPLY_PRESETGROUP";
+export function applyPresetGroup(groupName) {
+  return {
+    type : APPLY_PRESETGROUP,
+    name : groupName
+  };
+}
+
+export const RECEIVE_APPLY_PRESETGROUP_RESULT = "RECEIVE_APPLY_PRESETGROUP_RESULT";
+export function receiveApplyPresetGroupResult(groupName, json, status) {
+  return {
+    type : RECEIVE_APPLY_PRESETGROUP_RESULT,
+    groupName : groupName,
+    response : json,
+    status : status,
+    receivedAt : Date.now()
+  };
+}
+
+export const RECEIVE_APPLY_PRESETGROUP_RESULT_ERROR = "RECEIVE_APPLY_PRESETGROUP_RESULT_ERROR";
+export function receiveApplyPresetGroupResultError(groupName, error) {
+  return {
+    type : RECEIVE_APPLY_PRESETGROUP_RESULT_ERROR,
+    groupName : groupName,
+    response : null,
+    status : null,
+    error : error,
+    receivedAt : Date.now()
+  };
+}
+
+export function fetchApplyPresetGroup(groupName) {
+  return dispatch => {
+    return fetch(
+      "http://127.0.0.1:30000/api/controller/presets",
+      {
+        method: "POST",
+        mode: "cors",
+        redirect: "follow",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({name : groupName})
+      }
+    ).then(response => { 
+      response.json().then( data => { return {json: data, status: response.status};} )
+        .then(jsonResponse => {
+          dispatch(receiveApplyPresetGroupResult(groupName, jsonResponse.json, jsonResponse.status));
+          return true;
+        })
+        .then(() => {
+          const { Options } = store.getState();
+          Options.forEach( (option) => {
+            fetchOption(option.processName, option.configName, option.optionName)(dispatch);
+          });
+        });
+    })
+      .catch(err => {
+        dispatch(receiveApplyPresetGroupResultError(groupName, err));
+      });
+  };
+}
+
+export function doFetchApplyPresetGroup(groupName) {
+  return (dispatch, getState) => {
+    return fetchApplyPresetGroup(groupName);
   };
 }

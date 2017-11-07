@@ -46,7 +46,7 @@ export function fetchProcess(name) {
           });
       })
       .catch(err => {
-        dispatch(receiveProcessError(name, createGenericError(name, err)));
+        dispatch(receiveProcessError(name, createGenericError(err)));
       });
   };
 }
@@ -123,7 +123,7 @@ export function fetchPostProcessAction(name, action) {
         });
     })
       .catch(err => {
-        dispatch(receiveProcessActionResultError(name, action, err));
+        dispatch(receiveProcessActionResultError(name, action, createGenericError(err)));
       });
   };
 }
